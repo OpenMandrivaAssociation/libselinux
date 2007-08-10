@@ -4,7 +4,7 @@
 Summary:	SELinux library and simple utilities
 Name:		libselinux
 Version:	1.28
-Release:	%mkrel 1
+Release:	%mkrel 2
 License:	Public Domain
 Group:		System/Libraries
 URL:		http://www.nsa.gov/selinux/
@@ -43,6 +43,7 @@ decisions. Required for any applications that use the SELinux API.
 Summary:	Development libraries and header files
 Group:		Development/C
 Provides:	%{name}-devel = %{version}-%{release}
+Provides:       selinux-devel = %{version}-%{release}
 Requires:	%{libname} = %{version}-%{release}
 
 %description -n	%{libname}-devel
