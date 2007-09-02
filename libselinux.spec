@@ -1,17 +1,19 @@
 %define	major 1
 %define libname	%mklibname selinux %{major}
+%define libnamedevel %mklibname selinux -d
+%define libnamestaticdevel %mklibname selinux -d -s
 
-Summary:	SELinux library and simple utilities
 Name:		libselinux
-Version:	1.28
-Release:	%mkrel 2
+Version:	2.0.8
+Release:	%mkrel 1
+Summary:	SELinux library and simple utilities
 License:	Public Domain
 Group:		System/Libraries
 URL:		http://www.nsa.gov/selinux/
 Source0:	http://www.nsa.gov/selinux/archives/%{name}-%{version}.tgz
 Source1:	http://www.nsa.gov/selinux/archives/%{name}-%{version}.tgz.sign
-BuildRequires:	libsepol-devel
-BuildRequires:	python-devel
+BuildRequires:	sepol-devel
+%py_requires -d
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
@@ -39,16 +41,25 @@ libselinux provides an API for SELinux applications to get and set
 process and file security contexts and to obtain security policy
 decisions. Required for any applications that use the SELinux API.
 
-%package -n	%{libname}-devel
-Summary:	Development libraries and header files
+%package -n	%{libnamedevel}
+Summary:	Development libraries and header files for %{name}
 Group:		Development/C
-Provides:	%{name}-devel = %{version}-%{release}
 Provides:       selinux-devel = %{version}-%{release}
 Requires:	%{libname} = %{version}-%{release}
 
-%description -n	%{libname}-devel
-The selinux-devel package contains the static libraries and header
+%description -n	%{libnamedevel}
+The selinux-devel package contains the libraries and header
 files needed for developing SELinux applications. 
+
+%package -n	%{libnamestaticdevel}
+Summary:	Static development libraries for %{name}
+Group:		Development/C
+Provides:       selinux-devel = %{version}-%{release}
+Requires:	%{libnamedevel} = %{version}-%{release}
+
+%description -n	%{libnamestaticdevel}
+The selinux-static-devel package contains the static libraries
+needed for developing SELinux applications. 
 
 %package	utils
 Summary:	Utilities for %{name}
@@ -65,18 +76,17 @@ Group:		Development/Python
 This package contains python bindings for %{name}.
 
 %prep
-
 %setup -q
 
 %build
-
-%make \
+%{__make} \
     CFLAGS="%{optflags}" \
-    LIBDIR="%{_libdir}" \
-    PYLIBVER="python%{py_ver}" \
-    PYINC="%{_includedir}/python%{py_ver}" \
-    PYLIB="%{_libdir}/python%{py_ver}" \
-    PYTHONLIBDIR="%{_libdir}/python%{py_ver}"
+    LIBDIR=%{_libdir} \
+    PYLIBVER=%{py_ver} \
+    PYINC=%{py_incdir} \
+    PYLIB=%{py_platsitedir} \
+    PYTHONLIBDIR="%{py_platsitedir}" \
+    all pywrap
 
 %install
 [ "%{buildroot}" != "/" ] && rm -rf %{buildroot}
@@ -87,9 +97,11 @@ install -d %{buildroot}%{_libdir}
 install -d %{buildroot}/%{_lib} 
 install -d %{buildroot}%{_mandir}/man3
 
-%makeinstall_std \
+%{__make} \
+    DESTDIR=%{buildroot} \
     LIBDIR="%{buildroot}%{_libdir}" \
-    SHLIBDIR="%{buildroot}/%{_lib}"
+    SHLIBDIR="%{buildroot}/%{_lib}" \
+    install install-pywrap
 
 %clean
 [ "%{buildroot}" != "/" ] && rm -rf %{buildroot}
@@ -108,12 +120,15 @@ install -d %{buildroot}%{_mandir}/man3
 %{_sbindir}/*
 %{_mandir}/man?/*
 
-%files -n %{libname}-devel
+%files -n %{libnamedevel}
 %defattr(-,root,root)
 %{_includedir}/selinux/*.h
 %{_libdir}/*.so
+
+%files -n %{libnamestaticdevel}
+%defattr(-,root,root)
 %{_libdir}/*.a
 
 %files -n python-selinux
 %defattr(-,root,root)
-%{_libdir}/python*/site-packages/*
+%{py_platsitedir}/*
