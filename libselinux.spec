@@ -5,7 +5,7 @@
 
 Name:		libselinux
 Version:	2.0.8
-Release:	%mkrel 1
+Release:	%mkrel 2
 Summary:	SELinux library and simple utilities
 License:	Public Domain
 Group:		System/Libraries
@@ -46,6 +46,7 @@ Summary:	Development libraries and header files for %{name}
 Group:		Development/C
 Provides:       selinux-devel = %{version}-%{release}
 Requires:	%{libname} = %{version}-%{release}
+Obsoletes:      %{libname}-devel < %{version}-%{release}
 
 %description -n	%{libnamedevel}
 The selinux-devel package contains the libraries and header
@@ -54,7 +55,7 @@ files needed for developing SELinux applications.
 %package -n	%{libnamestaticdevel}
 Summary:	Static development libraries for %{name}
 Group:		Development/C
-Provides:       selinux-devel = %{version}-%{release}
+Provides:       selinux-static-devel = %{version}-%{release}
 Requires:	%{libnamedevel} = %{version}-%{release}
 
 %description -n	%{libnamestaticdevel}
