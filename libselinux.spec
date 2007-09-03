@@ -5,7 +5,7 @@
 
 Name:		libselinux
 Version:	2.0.8
-Release:	%mkrel 2
+Release:	%mkrel 3
 Summary:	SELinux library and simple utilities
 License:	Public Domain
 Group:		System/Libraries
@@ -13,7 +13,6 @@ URL:		http://www.nsa.gov/selinux/
 Source0:	http://www.nsa.gov/selinux/archives/%{name}-%{version}.tgz
 Source1:	http://www.nsa.gov/selinux/archives/%{name}-%{version}.tgz.sign
 BuildRequires:	sepol-devel
-%py_requires -d
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
@@ -72,6 +71,7 @@ This package contains numerous applications utilizing %{name}.
 %package -n	python-selinux
 Summary:	Python bindings for %{name}
 Group:		Development/Python
+%py_requires -d
 
 %description -n	python-selinux
 This package contains python bindings for %{name}.
