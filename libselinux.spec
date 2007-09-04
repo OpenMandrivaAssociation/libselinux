@@ -6,7 +6,7 @@
 
 Name:		libselinux
 Version:	2.0.8
-Release:	%mkrel 4
+Release:	%mkrel 5
 Summary:	SELinux library and simple utilities
 License:	Public Domain
 Group:		System/Libraries
@@ -34,7 +34,8 @@ decisions. Required for any applications that use the SELinux API.
 %package -n	%{libname}
 Summary:	SELinux library and simple utilities
 Group:          System/Libraries
-Provides:	%{name} = %{version}-%{release}
+Provides:       libselinux = %{version}-%{release}
+Provides:	selinux = %{version}-%{release}
 
 %description -n	%{libname}
 libselinux provides an API for SELinux applications to get and set
@@ -91,7 +92,7 @@ This package contains python bindings for %{name}.
     all pywrap
 
 %install
-[ "%{buildroot}" != "/" ] && rm -rf %{buildroot}
+rm -rf %{buildroot}
 
 install -d %{buildroot}%{_bindir} 
 install -d %{buildroot}%{_includedir}
@@ -106,7 +107,7 @@ install -d %{buildroot}%{_mandir}/man3
     install install-pywrap
 
 %clean
-[ "%{buildroot}" != "/" ] && rm -rf %{buildroot}
+rm -rf %{buildroot}
 
 %post -n %{libname} -p /sbin/ldconfig
 
