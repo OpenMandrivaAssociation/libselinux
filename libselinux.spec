@@ -14,7 +14,6 @@ URL:		http://www.nsa.gov/selinux/
 Source0:	http://www.nsa.gov/selinux/archives/%{name}-%{version}.tgz
 Source1:	http://www.nsa.gov/selinux/archives/%{name}-%{version}.tgz.sign
 BuildRequires:	sepol-devel
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
 Security-enhanced Linux is a patch of the Linux® kernel and a
