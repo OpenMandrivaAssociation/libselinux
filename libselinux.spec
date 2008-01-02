@@ -1,19 +1,20 @@
-%define	major 1
+%define major 1
 %define libnameold %mklibname selinux 1
-%define libname	%mklibname selinux %{major}
+%define libname        %mklibname selinux %{major}
 %define libnamedevel %mklibname selinux -d
 %define libnamestaticdevel %mklibname selinux -d -s
 
-Name:		libselinux
-Version:	2.0.8
-Release:	%mkrel 5
-Summary:	SELinux library and simple utilities
-License:	Public Domain
-Group:		System/Libraries
-URL:		http://www.nsa.gov/selinux/
-Source0:	http://www.nsa.gov/selinux/archives/%{name}-%{version}.tgz
-Source1:	http://www.nsa.gov/selinux/archives/%{name}-%{version}.tgz.sign
-BuildRequires:	sepol-devel
+Name:           libselinux
+Version:        2.0.35
+Release:        %mkrel 1
+Summary:        SELinux library and simple utilities
+License:        Public Domain
+Group:          System/Libraries
+URL:            http://www.nsa.gov/selinux/
+Source0:        http://www.nsa.gov/selinux/archives/%{name}-%{version}.tgz
+Source1:        http://www.nsa.gov/selinux/archives/%{name}-%{version}.tgz.sign
+BuildRequires:  sepol-devel
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 
 %description
 Security-enhanced Linux is a patch of the Linux® kernel and a
@@ -30,58 +31,58 @@ libselinux provides an API for SELinux applications to get and set
 process and file security contexts and to obtain security policy
 decisions. Required for any applications that use the SELinux API.
 
-%package -n	%{libname}
-Summary:	SELinux library and simple utilities
+%package -n %{libname}
+Summary:        SELinux library and simple utilities
 Group:          System/Libraries
 Provides:       libselinux = %{version}-%{release}
-Provides:	selinux = %{version}-%{release}
+Provides:       selinux = %{version}-%{release}
 
-%description -n	%{libname}
+%description -n %{libname}
 libselinux provides an API for SELinux applications to get and set
 process and file security contexts and to obtain security policy
 decisions. Required for any applications that use the SELinux API.
 
-%package -n	%{libnamedevel}
-Summary:	Development libraries and header files for %{name}
-Group:		Development/C
+%package -n %{libnamedevel}
+Summary:        Development libraries and header files for %{name}
+Group:          Development/C
 Provides:       selinux-devel = %{version}-%{release}
-Requires:	%{libname} = %{version}-%{release}
+Requires:       %{libname} = %{version}-%{release}
 Obsoletes:      %{libnameold}-devel < %{version}-%{release}
 
-%description -n	%{libnamedevel}
+%description -n %{libnamedevel}
 The selinux-devel package contains the libraries and header
 files needed for developing SELinux applications. 
 
-%package -n	%{libnamestaticdevel}
-Summary:	Static development libraries for %{name}
-Group:		Development/C
+%package -n %{libnamestaticdevel}
+Summary:        Static development libraries for %{name}
+Group:          Development/C
 Provides:       selinux-static-devel = %{version}-%{release}
-Requires:	%{libnamedevel} = %{version}-%{release}
+Requires:       %{libnamedevel} = %{version}-%{release}
 
-%description -n	%{libnamestaticdevel}
+%description -n %{libnamestaticdevel}
 The selinux-static-devel package contains the static libraries
 needed for developing SELinux applications. 
 
-%package	utils
-Summary:	Utilities for %{name}
-Group:		System/Kernel and hardware
+%package utils
+Summary:        Utilities for %{name}
+Group:          System/Kernel and hardware
 
-%description	utils
+%description utils
 This package contains numerous applications utilizing %{name}.
 
-%package -n	python-selinux
-Summary:	Python bindings for %{name}
-Group:		Development/Python
+%package -n python-selinux
+Summary:        Python bindings for %{name}
+Group:          Development/Python
 %py_requires -d
 
-%description -n	python-selinux
+%description -n python-selinux
 This package contains python bindings for %{name}.
 
 %prep
 %setup -q
 
 %build
-%{__make} \
+%{make} \
     CFLAGS="%{optflags}" \
     LIBDIR=%{_libdir} \
     PYLIBVER=%{py_ver} \
@@ -99,7 +100,7 @@ install -d %{buildroot}%{_libdir}
 install -d %{buildroot}/%{_lib} 
 install -d %{buildroot}%{_mandir}/man3
 
-%{__make} \
+%{make} \
     DESTDIR=%{buildroot} \
     LIBDIR="%{buildroot}%{_libdir}" \
     SHLIBDIR="%{buildroot}/%{_lib}" \
