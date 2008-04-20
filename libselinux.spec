@@ -5,14 +5,15 @@
 %define libnamestaticdevel %mklibname selinux -d -s
 
 Name:           libselinux
-Version:        2.0.35
+Version:        2.0.61
 Release:        %mkrel 1
 Summary:        SELinux library and simple utilities
 License:        Public Domain
 Group:          System/Libraries
 URL:            http://www.nsa.gov/selinux/
 Source0:        http://www.nsa.gov/selinux/archives/%{name}-%{version}.tgz
-Source1:        http://www.nsa.gov/selinux/archives/%{name}-%{version}.tgz.sign
+#Source1:        http://www.nsa.gov/selinux/archives/%{name}-%{version}.tgz.sign
+Patch0:         libselinux-rhat.patch
 BuildRequires:  sepol-devel
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 
@@ -80,9 +81,10 @@ This package contains python bindings for %{name}.
 
 %prep
 %setup -q
+%patch0 -p1
 
 %build
-%{make} \
+%{__make} \
     CFLAGS="%{optflags}" \
     LIBDIR=%{_libdir} \
     PYLIBVER=%{py_ver} \
