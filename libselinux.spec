@@ -14,7 +14,7 @@ URL:            http://www.nsa.gov/selinux/
 Source0:        http://www.nsa.gov/selinux/archives/%{name}-%{version}.tgz
 #Source1:        http://www.nsa.gov/selinux/archives/%{name}-%{version}.tgz.sign
 Patch0:         libselinux-rhat.patch
-BuildRequires:  sepol-devel
+BuildRequires:  sepol-static-devel
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 
 %description
