@@ -5,8 +5,8 @@
 %define libnamestaticdevel %mklibname selinux -d -s
 
 Name:           libselinux
-Version:        2.0.61
-Release:        %mkrel 2
+Version:        2.0.65
+Release:        %mkrel 1
 Summary:        SELinux library and simple utilities
 License:        Public Domain
 Group:          System/Libraries
@@ -14,6 +14,7 @@ URL:            http://www.nsa.gov/selinux/
 Source0:        http://www.nsa.gov/selinux/archives/%{name}-%{version}.tgz
 #Source1:        http://www.nsa.gov/selinux/archives/%{name}-%{version}.tgz.sign
 Patch0:         libselinux-rhat.patch
+Patch1:         libselinux-fix_string.patch
 BuildRequires:  sepol-static-devel
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 
@@ -52,7 +53,7 @@ Obsoletes:      %{libnameold}-devel < %{version}-%{release}
 
 %description -n %{libnamedevel}
 The selinux-devel package contains the libraries and header
-files needed for developing SELinux applications. 
+files needed for developing SELinux applications.
 
 %package -n %{libnamestaticdevel}
 Summary:        Static development libraries for %{name}
@@ -62,7 +63,7 @@ Requires:       %{libnamedevel} = %{version}-%{release}
 
 %description -n %{libnamestaticdevel}
 The selinux-static-devel package contains the static libraries
-needed for developing SELinux applications. 
+needed for developing SELinux applications.
 
 %package utils
 Summary:        Utilities for %{name}
@@ -81,7 +82,8 @@ This package contains python bindings for %{name}.
 
 %prep
 %setup -q
-%patch0 -p1
+%patch0 -p0
+%patch1 -p0
 
 %build
 %{__make} \
@@ -96,10 +98,10 @@ This package contains python bindings for %{name}.
 %install
 rm -rf %{buildroot}
 
-install -d %{buildroot}%{_bindir} 
+install -d %{buildroot}%{_bindir}
 install -d %{buildroot}%{_includedir}
 install -d %{buildroot}%{_libdir}
-install -d %{buildroot}/%{_lib} 
+install -d %{buildroot}/%{_lib}
 install -d %{buildroot}%{_mandir}/man3
 
 %{make} \
