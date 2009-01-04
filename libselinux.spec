@@ -6,7 +6,7 @@
 
 Name:           libselinux
 Version:        2.0.76
-Release:        %mkrel 1
+Release:        %mkrel 2
 Summary:        SELinux library and simple utilities
 License:        Public Domain
 Group:          System/Libraries
