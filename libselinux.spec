@@ -5,8 +5,8 @@
 %define libnamestaticdevel %mklibname selinux -d -s
 
 Name:           libselinux
-Version:        2.0.76
-Release:        %mkrel 2
+Version:        2.0.77
+Release:        %mkrel 1
 Summary:        SELinux library and simple utilities
 License:        Public Domain
 Group:          System/Libraries
@@ -127,6 +127,7 @@ rm -rf %{buildroot}
 %defattr(-,root,root)
 %doc ChangeLog LICENSE
 %{_sbindir}/*
+/sbin/matchpathcon
 %{_mandir}/man?/*
 
 %files -n %{libnamedevel}
