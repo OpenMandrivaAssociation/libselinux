@@ -6,7 +6,7 @@
 
 Name:           libselinux
 Version:        2.0.78
-Release:        %mkrel 2
+Release:        %mkrel 3
 Summary:        SELinux library and simple utilities
 License:        Public Domain
 Group:          System/Libraries
@@ -14,6 +14,7 @@ URL:            http://www.nsa.gov/selinux/
 Source0:        http://www.nsa.gov/selinux/archives/%{name}-%{version}.tgz
 #Source1:        http://www.nsa.gov/selinux/archives/%{name}-%{version}.tgz.sign
 Patch0:         libselinux-rhat.patch
+Patch1:		libselinux-2.0.78-fix-build.patch
 BuildRequires:  sepol-static-devel
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 
@@ -82,11 +83,13 @@ This package contains python bindings for %{name}.
 %prep
 %setup -q
 %patch0 -p1
+%patch1 -p0 -b .build
 
 %build
 %{__make} \
     CFLAGS="%{optflags}" \
     LIBDIR=%{_libdir} \
+    LDFLAGS="%{ldflags}" \
     PYLIBVER=%{py_ver} \
     PYINC=%{py_incdir} \
     PYLIB=%{py_platsitedir} \
