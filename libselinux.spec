@@ -16,7 +16,6 @@ Source0:        http://www.nsa.gov/selinux/archives/%{name}-%{version}.tgz
 Patch0:         libselinux-rhat.patch
 Patch1:		libselinux-2.0.78-fix-build.patch
 BuildRequires:  sepol-static-devel
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 
 %description
 Security-enhanced Linux is a patch of the Linux® kernel and a
@@ -89,6 +88,7 @@ This package contains python bindings for %{name}.
 %{__make} \
     CFLAGS="%{optflags}" \
     LIBDIR=%{_libdir} \
+    CC=%{__cc}	\
     LDFLAGS="%{ldflags}" \
     PYLIBVER=%{py_ver} \
     PYINC=%{py_incdir} \
@@ -97,8 +97,6 @@ This package contains python bindings for %{name}.
     all pywrap
 
 %install
-rm -rf %{buildroot}
-
 install -d %{buildroot}%{_bindir}
 install -d %{buildroot}%{_includedir}
 install -d %{buildroot}%{_libdir}
@@ -111,39 +109,23 @@ install -d %{buildroot}%{_mandir}/man3
     SHLIBDIR="%{buildroot}/%{_lib}" \
     install install-pywrap
 
-%clean
-rm -rf %{buildroot}
-
-%if %mdkversion < 200900
-%post -n %{libname} -p /sbin/ldconfig
-%endif
-
-%if %mdkversion < 200900
-%postun -n %{libname} -p /sbin/ldconfig
-%endif
-
 %files -n %{libname}
-%defattr(-,root,root)
 /%{_lib}/libselinux.so.*
 
 %files utils
-%defattr(-,root,root)
 %doc ChangeLog LICENSE
 %{_sbindir}/*
 /sbin/matchpathcon
 %{_mandir}/man?/*
 
 %files -n %{libnamedevel}
-%defattr(-,root,root)
 %{_includedir}/selinux/*.h
 %{_libdir}/*.so
 
 %files -n %{libnamestaticdevel}
-%defattr(-,root,root)
 %{_libdir}/*.a
 
 %files -n python-selinux
-%defattr(-,root,root)
 %{py_platsitedir}/*
 
 
