@@ -1,5 +1,5 @@
---- src/init.c.build	2010-11-12 04:00:58.000000000 +0000
-+++ src/init.c	2010-11-12 04:01:16.000000000 +0000
+--- ./src/init.c.build	2010-11-12 04:00:58.000000000 +0000
++++ ./src/init.c	2010-11-12 04:01:16.000000000 +0000
 @@ -8,6 +8,7 @@
  #include <stdio_ext.h>
  #include <dlfcn.h>
@@ -8,8 +8,8 @@
  #include <stdint.h>
  #include <limits.h>
  
---- src/label_file.c.build	2010-11-12 04:01:29.000000000 +0000
-+++ src/label_file.c	2010-11-12 04:02:34.000000000 +0000
+--- ./src/label_file.c.build	2010-11-12 04:01:29.000000000 +0000
++++ ./src/label_file.c	2010-11-12 04:02:34.000000000 +0000
 @@ -17,6 +17,7 @@
  #include <errno.h>
  #include <limits.h>
@@ -18,8 +18,8 @@
  #include "callbacks.h"
  #include "label_internal.h"
  
---- src/Makefile.build	2009-03-02 18:14:53.000000000 +0000
-+++ src/Makefile	2010-11-12 04:05:33.000000000 +0000
+--- ./src/Makefile.build	2009-03-02 18:14:53.000000000 +0000
++++ ./src/Makefile	2010-11-12 04:05:33.000000000 +0000
 @@ -73,7 +73,7 @@
  	$(CC) $(filter-out -Werror,$(CFLAGS)) -I$(RUBYINC) -fPIC -DSHARED -c -o $@ $<
  
