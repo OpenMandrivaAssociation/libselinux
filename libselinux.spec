@@ -6,7 +6,7 @@
 Summary:	SELinux library and simple utilities
 Name:		libselinux
 Version:	2.0.78
-Release:	%mkrel 6
+Release:	6
 License:	Public Domain
 Group:		System/Libraries
 Url:		http://www.nsa.gov/selinux/
@@ -82,6 +82,7 @@ This package contains python bindings for %{name}.
 %apply_patches
 
 %build
+%serverbuild_hardened
 %make \
 	CFLAGS="%{optflags}" \
 	LIBDIR=%{_libdir} \
@@ -106,14 +107,14 @@ install -d %{buildroot}%{_mandir}/man3
 	SHLIBDIR="%{buildroot}/%{_lib}" \
 	install install-pywrap
 
-%files -n %{libname}
-/%{_lib}/libselinux.so.%{major}*
-
 %files utils
 %doc ChangeLog LICENSE
 %{_sbindir}/*
 /sbin/matchpathcon
 %{_mandir}/man?/*
+
+%files -n %{libname}
+/%{_lib}/libselinux.so.%{major}*
 
 %files -n %{devname}
 %{_includedir}/selinux/*.h
