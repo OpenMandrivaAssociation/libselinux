@@ -83,7 +83,7 @@ This package contains python bindings for %{name}.
 
 %build
 %serverbuild_hardened
-%make \
+make \
 	CFLAGS="%{optflags}" \
 	LIBDIR=%{_libdir} \
 	CC=%{__cc}	\
