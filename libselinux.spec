@@ -72,7 +72,7 @@ This package contains numerous applications utilizing %{name}.
 %package -n python-selinux
 Summary:	Python bindings for %{name}
 Group:		Development/Python
-%py_requires -d
+BuildRequires:  python-devel
 
 %description -n python-selinux
 This package contains python bindings for %{name}.
