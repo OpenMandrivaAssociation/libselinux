@@ -72,7 +72,7 @@ This package contains numerous applications utilizing %{name}.
 %package -n python-selinux
 Summary:	Python bindings for %{name}
 Group:		Development/Python
-BuildRequires:  pkgconfig(python-devel)
+BuildRequires:  pkgconfig(python-2.7)
 
 %description -n python-selinux
 This package contains python bindings for %{name}.
