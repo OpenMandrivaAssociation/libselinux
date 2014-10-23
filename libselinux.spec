@@ -84,6 +84,8 @@ This package contains python bindings for %{name}.
 %apply_patches
 
 %build
+%global optflags %{optflags} -Qunused-arguments
+
 %serverbuild_hardened
 make \
 	CFLAGS="%{optflags}" \
