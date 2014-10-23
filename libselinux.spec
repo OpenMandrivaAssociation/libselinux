@@ -108,8 +108,8 @@ install -d %{buildroot}%{_mandir}/man3
 	LIBDIR="%{buildroot}%{_libdir}" \
 	SHLIBDIR="%{buildroot}/%{_lib}" \
     PYLIBVER=%{py2_ver} \
-	PYINC=%{py2_incdir} \
-	PYLIB=%{py2_platsitedir} \
+	PYINC="%{buildroot}/%{py2_incdir}" \
+	PYLIB="%{buildroot}%{py2_platsitedir}" \
 	PYTHONLIBDIR="%{buildroot}/%{py2_platsitedir}" \
 	install install-pywrap
 
