@@ -3,6 +3,8 @@
 %define devname %mklibname selinux -d
 %define statname %mklibname selinux -d -s
 
+%define _disable_ld_no_undefined 1
+
 Summary:	SELinux library and simple utilities
 Name:		libselinux
 Version:	2.0.78
