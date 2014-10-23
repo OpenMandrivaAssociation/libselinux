@@ -6,7 +6,7 @@
 Summary:	SELinux library and simple utilities
 Name:		libselinux
 Version:	2.0.78
-Release:	12
+Release:	13
 License:	Public Domain
 Group:		System/Libraries
 Url:		http://www.nsa.gov/selinux/
@@ -88,10 +88,10 @@ make \
 	LIBDIR=%{_libdir} \
 	CC=%{__cc}	\
 	LDFLAGS="%{ldflags}" \
-	PYLIBVER=%{py_ver} \
-	PYINC=%{py_incdir} \
-	PYLIB=%{py_platsitedir} \
-	PYTHONLIBDIR="%{py_platsitedir}" \
+	PYLIBVER=%{py2_ver} \
+	PYINC=%{py2_incdir} \
+	PYLIB=%{py2_platsitedir} \
+	PYTHONLIBDIR="%{py2_platsitedir}" \
 	all pywrap
 
 %install
@@ -124,5 +124,5 @@ install -d %{buildroot}%{_mandir}/man3
 %{_libdir}/*.a
 
 %files -n python-selinux
-%{py_platsitedir}/*
+%{py2_platsitedir}/*
 
