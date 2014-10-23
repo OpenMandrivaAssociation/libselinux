@@ -74,7 +74,7 @@ This package contains numerous applications utilizing %{name}.
 %package -n python-selinux
 Summary:	Python bindings for %{name}
 Group:		Development/Python
-BuildRequires:  pkgconfig(python-2.7)
+BuildRequires:  pkgconfig(python2)
 
 %description -n python-selinux
 This package contains python bindings for %{name}.
@@ -110,9 +110,9 @@ install -d %{buildroot}%{_mandir}/man3
 	LIBDIR="%{buildroot}%{_libdir}" \
 	SHLIBDIR="%{buildroot}/%{_lib}" \
     PYLIBVER=%{py2_ver} \
-	PYINC="%{buildroot}/%{py2_incdir}" \
-	PYLIB="%{buildroot}%{py2_platsitedir}" \
-	PYTHONLIBDIR="%{buildroot}/%{py2_platsitedir}" \
+    PYINC="%{buildroot}/%{py2_incdir}" \
+    PYLIB="%{buildroot}%{py2_platsitedir}" \
+    PYTHONLIBDIR="%{buildroot}/%{py2_platsitedir}" \
 	install install-pywrap
 
 %files utils
