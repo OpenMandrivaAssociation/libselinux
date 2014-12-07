@@ -8,7 +8,7 @@
 Summary:	SELinux library and simple utilities
 Name:		libselinux
 Version:	2.0.78
-Release:	14
+Release:	15
 License:	Public Domain
 Group:		System/Libraries
 Url:		http://www.nsa.gov/selinux/
