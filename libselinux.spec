@@ -83,6 +83,9 @@ This package contains python bindings for %{name}.
 %setup -q
 %apply_patches
 
+# clang doesnt support this option
+sed -i 's/-mno-tls-direct-seg-refs//' src/Makefile
+
 %build
 %global optflags %{optflags} -Qunused-arguments
 
@@ -90,7 +93,7 @@ This package contains python bindings for %{name}.
 make \
 	CFLAGS="%{optflags}" \
 	LIBDIR=%{_libdir} \
-	CC=gcc \
+	CC=%{__cc} \
 	LDFLAGS="%{ldflags}" \
 	PYLIBVER=%{py2_ver} \
 	PYINC=%{py2_incdir} \
