@@ -8,7 +8,7 @@
 Summary:	SELinux library and simple utilities
 Name:		libselinux
 Version:	2.0.78
-Release:	15
+Release:	16
 License:	Public Domain
 Group:		System/Libraries
 Url:		http://www.nsa.gov/selinux/
@@ -90,7 +90,7 @@ This package contains python bindings for %{name}.
 make \
 	CFLAGS="%{optflags}" \
 	LIBDIR=%{_libdir} \
-	CC=%{__cc}	\
+	CC=gcc \
 	LDFLAGS="%{ldflags}" \
 	PYLIBVER=%{py2_ver} \
 	PYINC=%{py2_incdir} \
