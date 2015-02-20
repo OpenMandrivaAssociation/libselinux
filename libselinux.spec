@@ -11,9 +11,8 @@ Version:	2.0.78
 Release:	16
 License:	Public Domain
 Group:		System/Libraries
-Url:		http://www.nsa.gov/selinux/
-Source0:	http://www.nsa.gov/selinux/archives/%{name}-%{version}.tgz
-#Source1:	http://www.nsa.gov/selinux/archives/%{name}-%{version}.tgz.sign
+Url:		https://github.com/SELinuxProject/selinux/wiki
+Source0:	%{name}-%{version}.tgz
 Patch0:		libselinux-rhat.patch
 Patch1:		libselinux-2.0.78-fix-build.patch
 BuildRequires:	sepol-static-devel
