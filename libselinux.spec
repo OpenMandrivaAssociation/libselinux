@@ -7,12 +7,12 @@
 
 Summary:	SELinux library and simple utilities
 Name:		libselinux
-Version:	2.0.78
-Release:	16
+Version:	2.4
+Release:	1
 License:	Public Domain
 Group:		System/Libraries
 Url:		https://github.com/SELinuxProject/selinux/wiki
-Source0:	%{name}-%{version}.tgz
+Source0:	%{name}-%{version}.tar.gz
 Patch0:		libselinux-rhat.patch
 Patch1:		libselinux-2.0.78-fix-build.patch
 BuildRequires:	sepol-static-devel
