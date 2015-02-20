@@ -1,18 +1,5 @@
-diff --git a/Makefile b/Makefile
-index 6142b60..bdf9de8 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1,4 +1,4 @@
--SUBDIRS = src include utils man
-+SUBDIRS = src include utils man golang
- 
- DISABLE_AVC ?= n
- DISABLE_SETRANS ?= n
-diff --git a/golang/Makefile b/golang/Makefile
-new file mode 100644
-index 0000000..b75677b
---- /dev/null
-+++ b/golang/Makefile
+--- libselinux-2.4/golang/Makefile.0000~	2015-02-20 04:53:24.714629818 +0100
++++ libselinux-2.4/golang/Makefile	2015-02-20 04:53:24.714629818 +0100
 @@ -0,0 +1,22 @@
 +# Installation directories.
 +PREFIX ?= $(DESTDIR)/usr
@@ -36,11 +23,8 @@ index 0000000..b75677b
 +indent:
 +
 +relabel:
-diff --git a/golang/selinux.go b/golang/selinux.go
-new file mode 100644
-index 0000000..34bf6bb
---- /dev/null
-+++ b/golang/selinux.go
+--- libselinux-2.4/golang/selinux.go.0000~	2015-02-20 04:53:24.714629818 +0100
++++ libselinux-2.4/golang/selinux.go	2015-02-20 04:53:24.714629818 +0100
 @@ -0,0 +1,412 @@
 +package selinux
 +
@@ -454,11 +438,8 @@ index 0000000..34bf6bb
 +	fmt.Println(Getfscreatecon())
 +	fmt.Println(Getpidcon(1))
 +}
-diff --git a/golang/test.go b/golang/test.go
-new file mode 100644
-index 0000000..fed6de8
---- /dev/null
-+++ b/golang/test.go
+--- libselinux-2.4/golang/test.go.0000~	2015-02-20 04:53:24.714629818 +0100
++++ libselinux-2.4/golang/test.go	2015-02-20 04:53:24.714629818 +0100
 @@ -0,0 +1,9 @@
 +package main
 +
@@ -469,11 +450,9 @@ index 0000000..fed6de8
 +func main() {
 +	selinux.Test()
 +}
-diff --git a/include/selinux/selinux.h b/include/selinux/selinux.h
-index d0eb5c6..4beb170 100644
---- a/include/selinux/selinux.h
-+++ b/include/selinux/selinux.h
-@@ -543,6 +543,7 @@ extern const char *selinux_virtual_image_context_path(void);
+--- libselinux-2.4/include/selinux/selinux.h.0000~	2015-02-02 15:38:10.000000000 +0100
++++ libselinux-2.4/include/selinux/selinux.h	2015-02-20 04:53:24.715629818 +0100
+@@ -543,6 +543,7 @@ extern const char *selinux_virtual_image
  extern const char *selinux_lxc_contexts_path(void);
  extern const char *selinux_x_context_path(void);
  extern const char *selinux_sepgsql_context_path(void);
@@ -481,10 +460,16 @@ index d0eb5c6..4beb170 100644
  extern const char *selinux_systemd_contexts_path(void);
  extern const char *selinux_contexts_path(void);
  extern const char *selinux_securetty_types_path(void);
-diff --git a/man/man3/getfscreatecon.3 b/man/man3/getfscreatecon.3
-index e348d3b..8cc4df5 100644
---- a/man/man3/getfscreatecon.3
-+++ b/man/man3/getfscreatecon.3
+--- libselinux-2.4/Makefile.0000~	2015-02-02 15:38:10.000000000 +0100
++++ libselinux-2.4/Makefile	2015-02-20 04:53:24.714629818 +0100
+@@ -1,4 +1,4 @@
+-SUBDIRS = src include utils man
++SUBDIRS = src include utils man golang
+ 
+ DISABLE_AVC ?= n
+ DISABLE_SETRANS ?= n
+--- libselinux-2.4/man/man3/getfscreatecon.3.0000~	2015-02-02 15:38:10.000000000 +0100
++++ libselinux-2.4/man/man3/getfscreatecon.3	2015-02-20 04:53:24.715629818 +0100
 @@ -49,6 +49,11 @@ Signal handlers that perform a
  must take care to
  save, reset, and restore the fscreate context to avoid unexpected behavior.
@@ -497,10 +482,8 @@ index e348d3b..8cc4df5 100644
  .SH "RETURN VALUE"
  On error \-1 is returned.
  On success 0 is returned.
-diff --git a/man/man3/getkeycreatecon.3 b/man/man3/getkeycreatecon.3
-index 4d70f10..b51008d 100644
---- a/man/man3/getkeycreatecon.3
-+++ b/man/man3/getkeycreatecon.3
+--- libselinux-2.4/man/man3/getkeycreatecon.3.0000~	2015-02-02 15:38:10.000000000 +0100
++++ libselinux-2.4/man/man3/getkeycreatecon.3	2015-02-20 04:53:24.715629818 +0100
 @@ -48,6 +48,10 @@ Signal handlers that perform a
  .BR setkeycreatecon ()
  must take care to
@@ -512,10 +495,8 @@ index 4d70f10..b51008d 100644
  .
  .SH "RETURN VALUE"
  On error \-1 is returned.
-diff --git a/man/man3/getsockcreatecon.3 b/man/man3/getsockcreatecon.3
-index 4dd8f30..26086d9 100644
---- a/man/man3/getsockcreatecon.3
-+++ b/man/man3/getsockcreatecon.3
+--- libselinux-2.4/man/man3/getsockcreatecon.3.0000~	2015-02-02 15:38:10.000000000 +0100
++++ libselinux-2.4/man/man3/getsockcreatecon.3	2015-02-20 04:53:24.715629818 +0100
 @@ -49,6 +49,11 @@ Signal handlers that perform a
  must take care to
  save, reset, and restore the sockcreate context to avoid unexpected behavior.
@@ -528,52 +509,8 @@ index 4dd8f30..26086d9 100644
  .SH "RETURN VALUE"
  On error \-1 is returned.
  On success 0 is returned.
-diff --git a/man/man8/selinux.8 b/man/man8/selinux.8
-index e89b1ef..fd20363 100644
---- a/man/man8/selinux.8
-+++ b/man/man8/selinux.8
-@@ -74,7 +74,7 @@ The best way to relabel the file system is to create the flag file
- and reboot.
- .BR system\-config\-selinux ,
- also has this capability.  The
--.BR restorcon / fixfiles
-+.BR restorecon / fixfiles
- commands are also available for relabeling files.
- .
- .SH AUTHOR	
-@@ -91,11 +91,13 @@ This manual page was written by Dan Walsh <dwalsh@redhat.com>.
- .BR sepolicy (8),
- .BR system-config-selinux (8),
- .BR togglesebool (8),
--.BR restorecon (8),
- .BR fixfiles (8),
-+.BR restorecon (8),
- .BR setfiles (8),
- .BR semanage (8),
--.BR sepolicy(8)
-+.BR sepolicy(8),
-+.BR seinfo(8),
-+.BR sesearch(8)
- 
- Every confined service on the system has a man page in the following format:
- .br
-diff --git a/src/Makefile b/src/Makefile
-index 4d07ba6..62c8dad 100644
---- a/src/Makefile
-+++ b/src/Makefile
-@@ -111,7 +111,7 @@ $(LIBA): $(OBJS)
- 	$(RANLIB) $@
- 
- $(LIBSO): $(LOBJS)
--	$(CC) $(CFLAGS) -shared -o $@ $^ -lpcre -ldl $(LDFLAGS) -L$(LIBDIR) -Wl,-soname,$(LIBSO),-z,defs,-z,relro
-+	$(CC) $(CFLAGS) -shared -o $@ $^ -lpcre -llzma -ldl $(LDFLAGS) -L$(LIBDIR) -Wl,-soname,$(LIBSO),-z,defs,-z,relro
- 	ln -sf $@ $(TARGET) 
- 
- $(LIBPC): $(LIBPC).in ../VERSION
-diff --git a/src/avc_sidtab.c b/src/avc_sidtab.c
-index 52f21df..66ad9e1 100644
---- a/src/avc_sidtab.c
-+++ b/src/avc_sidtab.c
+--- libselinux-2.4/src/avc_sidtab.c.0000~	2015-02-02 15:38:10.000000000 +0100
++++ libselinux-2.4/src/avc_sidtab.c	2015-02-20 04:53:24.716629818 +0100
 @@ -81,6 +81,11 @@ sidtab_context_to_sid(struct sidtab *s,
  	int hvalue, rc = 0;
  	struct sidtab_node *cur;
@@ -586,11 +523,9 @@ index 52f21df..66ad9e1 100644
  	*sid = NULL;
  	hvalue = sidtab_hash(ctx);
  
-diff --git a/src/canonicalize_context.c b/src/canonicalize_context.c
-index 7cf3139..364a746 100644
---- a/src/canonicalize_context.c
-+++ b/src/canonicalize_context.c
-@@ -17,6 +17,11 @@ int security_canonicalize_context_raw(const char * con,
+--- libselinux-2.4/src/canonicalize_context.c.0000~	2015-02-02 15:38:10.000000000 +0100
++++ libselinux-2.4/src/canonicalize_context.c	2015-02-20 04:53:24.716629818 +0100
+@@ -17,6 +17,11 @@ int security_canonicalize_context_raw(co
  	size_t size;
  	int fd, ret;
  
@@ -602,11 +537,9 @@ index 7cf3139..364a746 100644
  	if (!selinux_mnt) {
  		errno = ENOENT;
  		return -1;
-diff --git a/src/check_context.c b/src/check_context.c
-index 52063fa..234749c 100644
---- a/src/check_context.c
-+++ b/src/check_context.c
-@@ -14,6 +14,11 @@ int security_check_context_raw(const char * con)
+--- libselinux-2.4/src/check_context.c.0000~	2015-02-02 15:38:10.000000000 +0100
++++ libselinux-2.4/src/check_context.c	2015-02-20 04:53:24.716629818 +0100
+@@ -14,6 +14,11 @@ int security_check_context_raw(const cha
  	char path[PATH_MAX];
  	int fd, ret;
  
@@ -618,11 +551,9 @@ index 52063fa..234749c 100644
  	if (!selinux_mnt) {
  		errno = ENOENT;
  		return -1;
-diff --git a/src/compute_av.c b/src/compute_av.c
-index 937e5c3..35ace7f 100644
---- a/src/compute_av.c
-+++ b/src/compute_av.c
-@@ -26,6 +26,11 @@ int security_compute_av_flags_raw(const char * scon,
+--- libselinux-2.4/src/compute_av.c.0000~	2015-02-02 15:38:10.000000000 +0100
++++ libselinux-2.4/src/compute_av.c	2015-02-20 04:53:24.716629818 +0100
+@@ -26,6 +26,11 @@ int security_compute_av_flags_raw(const
  		return -1;
  	}
  
@@ -634,11 +565,9 @@ index 937e5c3..35ace7f 100644
  	snprintf(path, sizeof path, "%s/access", selinux_mnt);
  	fd = open(path, O_RDWR);
  	if (fd < 0)
-diff --git a/src/compute_create.c b/src/compute_create.c
-index 9559d42..14a65d1 100644
---- a/src/compute_create.c
-+++ b/src/compute_create.c
-@@ -64,6 +64,11 @@ int security_compute_create_name_raw(const char * scon,
+--- libselinux-2.4/src/compute_create.c.0000~	2015-02-02 15:38:10.000000000 +0100
++++ libselinux-2.4/src/compute_create.c	2015-02-20 04:53:24.716629818 +0100
+@@ -64,6 +64,11 @@ int security_compute_create_name_raw(con
  		return -1;
  	}
  
@@ -650,11 +579,9 @@ index 9559d42..14a65d1 100644
  	snprintf(path, sizeof path, "%s/create", selinux_mnt);
  	fd = open(path, O_RDWR);
  	if (fd < 0)
-diff --git a/src/compute_member.c b/src/compute_member.c
-index 1fc7e41..065d996 100644
---- a/src/compute_member.c
-+++ b/src/compute_member.c
-@@ -25,6 +25,11 @@ int security_compute_member_raw(const char * scon,
+--- libselinux-2.4/src/compute_member.c.0000~	2015-02-02 15:38:10.000000000 +0100
++++ libselinux-2.4/src/compute_member.c	2015-02-20 04:53:24.716629818 +0100
+@@ -25,6 +25,11 @@ int security_compute_member_raw(const ch
  		return -1;
  	}
  
@@ -666,11 +593,9 @@ index 1fc7e41..065d996 100644
  	snprintf(path, sizeof path, "%s/member", selinux_mnt);
  	fd = open(path, O_RDWR);
  	if (fd < 0)
-diff --git a/src/compute_relabel.c b/src/compute_relabel.c
-index 4615aee..cc77f36 100644
---- a/src/compute_relabel.c
-+++ b/src/compute_relabel.c
-@@ -25,6 +25,11 @@ int security_compute_relabel_raw(const char * scon,
+--- libselinux-2.4/src/compute_relabel.c.0000~	2015-02-02 15:38:10.000000000 +0100
++++ libselinux-2.4/src/compute_relabel.c	2015-02-20 04:53:24.716629818 +0100
+@@ -25,6 +25,11 @@ int security_compute_relabel_raw(const c
  		return -1;
  	}
  
@@ -682,11 +607,9 @@ index 4615aee..cc77f36 100644
  	snprintf(path, sizeof path, "%s/relabel", selinux_mnt);
  	fd = open(path, O_RDWR);
  	if (fd < 0)
-diff --git a/src/compute_user.c b/src/compute_user.c
-index b37c5d3..7703c26 100644
---- a/src/compute_user.c
-+++ b/src/compute_user.c
-@@ -24,6 +24,11 @@ int security_compute_user_raw(const char * scon,
+--- libselinux-2.4/src/compute_user.c.0000~	2015-02-02 15:38:10.000000000 +0100
++++ libselinux-2.4/src/compute_user.c	2015-02-20 04:53:24.716629818 +0100
+@@ -24,6 +24,11 @@ int security_compute_user_raw(const char
  		return -1;
  	}
  
@@ -698,10 +621,8 @@ index b37c5d3..7703c26 100644
  	snprintf(path, sizeof path, "%s/user", selinux_mnt);
  	fd = open(path, O_RDWR);
  	if (fd < 0)
-diff --git a/src/file_path_suffixes.h b/src/file_path_suffixes.h
-index 3c92424..d1f9b48 100644
---- a/src/file_path_suffixes.h
-+++ b/src/file_path_suffixes.h
+--- libselinux-2.4/src/file_path_suffixes.h.0000~	2015-02-02 15:38:10.000000000 +0100
++++ libselinux-2.4/src/file_path_suffixes.h	2015-02-20 04:53:24.717629817 +0100
 @@ -23,6 +23,7 @@ S_(BINPOLICY, "/policy/policy")
      S_(VIRTUAL_DOMAIN, "/contexts/virtual_domain_context")
      S_(VIRTUAL_IMAGE, "/contexts/virtual_image_context")
@@ -710,10 +631,8 @@ index 3c92424..d1f9b48 100644
      S_(SYSTEMD_CONTEXTS, "/contexts/systemd_contexts")
      S_(FILE_CONTEXT_SUBS, "/contexts/files/file_contexts.subs")
      S_(FILE_CONTEXT_SUBS_DIST, "/contexts/files/file_contexts.subs_dist")
-diff --git a/src/fsetfilecon.c b/src/fsetfilecon.c
-index 52707d0..0cbe12d 100644
---- a/src/fsetfilecon.c
-+++ b/src/fsetfilecon.c
+--- libselinux-2.4/src/fsetfilecon.c.0000~	2015-02-02 15:38:10.000000000 +0100
++++ libselinux-2.4/src/fsetfilecon.c	2015-02-20 04:53:24.717629817 +0100
 @@ -9,8 +9,12 @@
  
  int fsetfilecon_raw(int fd, const char * context)
@@ -729,10 +648,8 @@ index 52707d0..0cbe12d 100644
  	if (rc < 0 && errno == ENOTSUP) {
  		char * ccontext = NULL;
  		int err = errno;
-diff --git a/src/load_policy.c b/src/load_policy.c
-index e419f1a..275672d 100644
---- a/src/load_policy.c
-+++ b/src/load_policy.c
+--- libselinux-2.4/src/load_policy.c.0000~	2015-02-02 15:38:10.000000000 +0100
++++ libselinux-2.4/src/load_policy.c	2015-02-20 04:53:24.717629817 +0100
 @@ -16,6 +16,82 @@
  #include <dlfcn.h>
  #include "policy.h"
@@ -816,7 +733,7 @@ index e419f1a..275672d 100644
  
  int security_load_policy(void *data, size_t len)
  {
-@@ -55,7 +131,7 @@ int selinux_mkload_policy(int preservebools)
+@@ -55,7 +131,7 @@ int selinux_mkload_policy(int preservebo
  	struct stat sb;
  	struct utsname uts;
  	size_t size;
@@ -908,10 +825,8 @@ index e419f1a..275672d 100644
        close:
  	close(fd);
        dlclose:
-diff --git a/src/lsetfilecon.c b/src/lsetfilecon.c
-index 1d3b28a..ea6d70b 100644
---- a/src/lsetfilecon.c
-+++ b/src/lsetfilecon.c
+--- libselinux-2.4/src/lsetfilecon.c.0000~	2015-02-02 15:38:10.000000000 +0100
++++ libselinux-2.4/src/lsetfilecon.c	2015-02-20 04:53:24.717629817 +0100
 @@ -9,8 +9,13 @@
  
  int lsetfilecon_raw(const char *path, const char * context)
@@ -928,10 +843,19 @@ index 1d3b28a..ea6d70b 100644
  	if (rc < 0 && errno == ENOTSUP) {
  		char * ccontext = NULL;
  		int err = errno;
-diff --git a/src/matchpathcon.c b/src/matchpathcon.c
-index 3b96b1d..d5c90f6 100644
---- a/src/matchpathcon.c
-+++ b/src/matchpathcon.c
+--- libselinux-2.4/src/Makefile.0000~	2015-02-02 15:38:10.000000000 +0100
++++ libselinux-2.4/src/Makefile	2015-02-20 04:53:24.716629818 +0100
+@@ -111,7 +111,7 @@ $(LIBA): $(OBJS)
+ 	$(RANLIB) $@
+ 
+ $(LIBSO): $(LOBJS)
+-	$(CC) $(CFLAGS) -shared -o $@ $^ -lpcre -ldl $(LDFLAGS) -L$(LIBDIR) -Wl,-soname,$(LIBSO),-z,defs,-z,relro
++	$(CC) $(CFLAGS) -shared -o $@ $^ -lpcre -llzma -ldl $(LDFLAGS) -L$(LIBDIR) -Wl,-soname,$(LIBSO),-z,defs,-z,relro
+ 	ln -sf $@ $(TARGET) 
+ 
+ $(LIBPC): $(LIBPC).in ../VERSION
+--- libselinux-2.4/src/matchpathcon.c.0000~	2015-02-02 15:38:10.000000000 +0100
++++ libselinux-2.4/src/matchpathcon.c	2015-02-20 04:53:24.718629817 +0100
 @@ -2,6 +2,7 @@
  #include <string.h>
  #include <errno.h>
@@ -949,10 +873,8 @@ index 3b96b1d..d5c90f6 100644
  	va_end(ap);
  }
  
-diff --git a/src/selinux_config.c b/src/selinux_config.c
-index 30e9dc7..1bfe500 100644
---- a/src/selinux_config.c
-+++ b/src/selinux_config.c
+--- libselinux-2.4/src/selinux_config.c.0000~	2015-02-02 15:38:10.000000000 +0100
++++ libselinux-2.4/src/selinux_config.c	2015-02-20 04:53:24.718629817 +0100
 @@ -50,8 +50,9 @@
  #define FILE_CONTEXT_SUBS_DIST 25
  #define LXC_CONTEXTS      26
@@ -965,7 +887,7 @@ index 30e9dc7..1bfe500 100644
  
  /* Part of one-time lazy init */
  static pthread_once_t once = PTHREAD_ONCE_INIT;
-@@ -493,6 +494,13 @@ const char *selinux_lxc_contexts_path(void)
+@@ -493,6 +494,13 @@ const char *selinux_lxc_contexts_path(vo
  
  hidden_def(selinux_lxc_contexts_path)
  
@@ -979,10 +901,8 @@ index 30e9dc7..1bfe500 100644
  const char *selinux_systemd_contexts_path(void)
  {
  	return get_path(SYSTEMD_CONTEXTS);
-diff --git a/src/selinux_internal.h b/src/selinux_internal.h
-index afb2170..fe8eb67 100644
---- a/src/selinux_internal.h
-+++ b/src/selinux_internal.h
+--- libselinux-2.4/src/selinux_internal.h.0000~	2015-02-02 15:38:10.000000000 +0100
++++ libselinux-2.4/src/selinux_internal.h	2015-02-20 04:53:24.718629817 +0100
 @@ -82,6 +82,7 @@ hidden_proto(selinux_mkload_policy)
      hidden_proto(selinux_customizable_types_path)
      hidden_proto(selinux_media_context_path)
@@ -991,10 +911,8 @@ index afb2170..fe8eb67 100644
      hidden_proto(selinux_sepgsql_context_path)
      hidden_proto(selinux_systemd_contexts_path)
      hidden_proto(selinux_path)
-diff --git a/src/setfilecon.c b/src/setfilecon.c
-index d05969c..3f0200e 100644
---- a/src/setfilecon.c
-+++ b/src/setfilecon.c
+--- libselinux-2.4/src/setfilecon.c.0000~	2015-02-02 15:38:10.000000000 +0100
++++ libselinux-2.4/src/setfilecon.c	2015-02-20 04:53:24.718629817 +0100
 @@ -9,8 +9,12 @@
  
  int setfilecon_raw(const char *path, const char * context)
@@ -1010,50 +928,3 @@ index d05969c..3f0200e 100644
  	if (rc < 0 && errno == ENOTSUP) {
  		char * ccontext = NULL;
  		int err = errno;
-diff --git a/utils/sefcontext_compile.c b/utils/sefcontext_compile.c
-index 0adc968..9618989 100644
---- a/utils/sefcontext_compile.c
-+++ b/utils/sefcontext_compile.c
-@@ -4,6 +4,9 @@
- #include <stdint.h>
- #include <stdio.h>
- #include <string.h>
-+#include <unistd.h>
-+#include <sys/types.h>
-+#include <sys/stat.h>
- 
- #include <linux/limits.h>
- 
-@@ -323,6 +326,7 @@ int main(int argc, char *argv[])
- 	int rc;
- 	char *tmp= NULL;
- 	int fd;
-+	struct stat buf;
- 
- 	if (argc != 2) {
- 		fprintf(stderr, "usage: %s input_file\n", argv[0]);
-@@ -333,6 +337,11 @@ int main(int argc, char *argv[])
- 
- 	path = argv[1];
- 
-+	if (stat(path, &buf) < 0) {
-+		fprintf(stderr, "Can not stat: %s: %m\n", argv[0]);
-+		exit(EXIT_FAILURE);
-+	}
-+
- 	rc = process_file(&data, path);
- 	if (rc < 0)
- 		return rc;
-@@ -352,6 +361,12 @@ int main(int argc, char *argv[])
- 	if (fd < 0)
- 		goto err;
- 
-+	rc = fchmod(fd, buf.st_mode);
-+	if (rc < 0) {
-+		perror("fchmod failed to set permission on compiled regexs");
-+		goto err;
-+	}
-+
- 	rc = write_binary_file(&data, fd);
- 
- 	if (rc < 0)

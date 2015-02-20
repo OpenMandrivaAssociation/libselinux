@@ -13,9 +13,11 @@ License:	Public Domain
 Group:		System/Libraries
 Url:		https://github.com/SELinuxProject/selinux/wiki
 Source0:	%{name}-%{version}.tar.gz
+Source1:	selinuxconlist.8
+Source2:	selinuxdefcon.8
 Patch0:		libselinux-rhat.patch
-Patch1:		libselinux-2.0.78-fix-build.patch
-BuildRequires:	sepol-static-devel
+BuildRequires:	sepol-static-devel swig
+BuildRequires:	pkgconfig(liblzma) pkgconfig(libpcre)
 
 %description
 Security-enhanced Linux is a patch of the Linux® kernel and a
@@ -31,6 +33,13 @@ Role-based Access Control, and Multi-level Security.
 libselinux provides an API for SELinux applications to get and set
 process and file security contexts and to obtain security policy
 decisions. Required for any applications that use the SELinux API.
+
+%package utils
+Summary:	SELinux libselinux utilies
+Group:		Development/Libraries
+
+%description utils
+The libselinux-utils package contains the utilities.
 
 %package -n %{libname}
 Summary:	SELinux library and simple utilities
@@ -71,12 +80,22 @@ Group:		System/Kernel and hardware
 This package contains numerous applications utilizing %{name}.
 
 %package -n python-selinux
-Summary:	Python bindings for %{name}
+Summary:	Python 3 bindings for %{name}
 Group:		Development/Python
-BuildRequires:  pkgconfig(python2)
+BuildRequires:	pkgconfig(python3)
 
 %description -n python-selinux
-This package contains python bindings for %{name}.
+This package contains python 3 bindings for %{name}.
+
+%package -n ruby-selinux
+Summary:	SELinux ruby bindings for libselinux
+Group:		Development/Ruby
+BuildRequires:	pkgconfig(ruby)
+#Provides: ruby(selinux)
+
+%description -n ruby-selinux
+The libselinux-ruby package contains the ruby bindings for developing 
+SELinux applications. 
 
 %prep
 %setup -q
@@ -89,50 +108,78 @@ sed -i 's/-mno-tls-direct-seg-refs//' src/Makefile
 %global optflags %{optflags} -Qunused-arguments
 
 %serverbuild_hardened
-make \
+%make swigify
+%make \
 	CFLAGS="%{optflags}" \
 	LIBDIR=%{_libdir} \
+	SHLIBDIR=/%{_lib} \
 	CC=%{__cc} \
 	LDFLAGS="%{ldflags}" \
-	PYLIBVER=%{py2_ver} \
-	PYINC=%{py2_incdir} \
-	PYLIB=%{py2_platsitedir} \
-	PYTHONLIBDIR="%{py2_platsitedir}" \
-	all pywrap
+	all pywrap rubywrap
+
 
 %install
+mkdir -p %{buildroot}%{_tmpfilesdir}
 install -d %{buildroot}%{_bindir}
 install -d %{buildroot}%{_includedir}
 install -d %{buildroot}%{_libdir}
 install -d %{buildroot}/%{_lib}
 install -d %{buildroot}%{_mandir}/man3
+install -d %{buildroot}%{_varrun}/setrans
+echo "d /var/run/setrans 0755 root root" > %{buildroot}%{_tmpfilesdir}/libselinux.conf
 
-%make \
-	DESTDIR=%{buildroot} \
+
+%makeinstall_std \
 	LIBDIR="%{buildroot}%{_libdir}" \
 	SHLIBDIR="%{buildroot}/%{_lib}" \
-    PYLIBVER=%{py2_ver} \
-    PYINC="%{buildroot}/%{py2_incdir}" \
-    PYLIB="%{buildroot}%{py2_platsitedir}" \
-    PYTHONLIBDIR="%{buildroot}/%{py2_platsitedir}" \
-	install install-pywrap
+	RUBYINSTALL="%{buildroot}%{ruby_vendorarchdir}" \
+	install-pywrap install-rubywrap
+mv %{buildroot}%{_sbindir}/matchpathcon %{buildroot}/sbin/matchpathcon
+
+
+# Nuke the files we don't want to distribute
+rm %{buildroot}%{_sbindir}/compute_*
+rm %{buildroot}%{_sbindir}/getfilecon
+rm %{buildroot}%{_sbindir}/getpidcon
+rm %{buildroot}%{_sbindir}/policyvers
+rm %{buildroot}%{_sbindir}/setfilecon
+rm %{buildroot}%{_sbindir}/getseuser
+rm %{buildroot}%{_sbindir}/togglesebool
+rm %{buildroot}%{_sbindir}/selinux_check_securetty_context
+mv %{buildroot}%{_sbindir}/getdefaultcon %{buildroot}%{_sbindir}/selinuxdefcon
+mv %{buildroot}%{_sbindir}/getconlist %{buildroot}%{_sbindir}/selinuxconlist
+install -p -m644 %{SOURCE1} -D %{buildroot}%{_mandir}/man8/selinuxconlist.8
+install -p -m644 %{SOURCE2} -D %{buildroot}%{_mandir}/man8/selinuxdefcon.8
+rm %{buildroot}%{_mandir}/man8/togglesebool*
 
 %files utils
 %doc ChangeLog LICENSE
 %{_sbindir}/*
 /sbin/matchpathcon
-%{_mandir}/man?/*
+%{_mandir}/man[58]/*
+%ghost %{_varrun}/setrans
+%{_tmpfilesdir}/libselinux.conf
+
 
 %files -n %{libname}
 /%{_lib}/libselinux.so.%{major}*
 
 %files -n %{devname}
-%{_includedir}/selinux/*.h
-%{_libdir}/*.so
+%{_libdir}/libselinux.so
+%{_libdir}/pkgconfig/libselinux.pc
+%dir %{_libdir}/golang/src/pkg/github.com/selinux
+%{_libdir}/golang/src/pkg/github.com/selinux/selinux.go
+%dir %{_includedir}/selinux
+%{_includedir}/selinux/*
+%{_mandir}/man3/*
 
 %files -n %{statname}
-%{_libdir}/*.a
+%{_libdir}/libselinux.a
 
 %files -n python-selinux
-%{py2_platsitedir}/*
+%dir %{python_sitearch}/selinux
+%{python_sitearch}/selinux/*.py*
+%{python_sitearch}/selinux/*.so
 
+%files -n ruby-selinux
+%{ruby_vendorarchdir}/selinux.so
