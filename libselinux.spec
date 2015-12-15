@@ -4,6 +4,7 @@
 %define statname %mklibname selinux -d -s
 
 %define _disable_ld_no_undefined 1
+%define _disable_lto 1
 
 Summary:	SELinux library and simple utilities
 Name:		libselinux
