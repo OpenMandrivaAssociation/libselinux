@@ -9,7 +9,7 @@
 Summary:	SELinux library and simple utilities
 Name:		libselinux
 Version:	2.4
-Release:	3
+Release:	4
 License:	Public Domain
 Group:		System/Libraries
 Url:		https://github.com/SELinuxProject/selinux/wiki
@@ -102,8 +102,9 @@ SELinux applications.
 %setup -q
 %apply_patches
 
-# clang doesnt support this option
+# clang doesnt support these options
 sed -i 's/-mno-tls-direct-seg-refs//' src/Makefile
+sed -i 's/-fipa-pure-const//' src/Makefile utils/Makefile
 
 %build
 %global optflags %{optflags} -Qunused-arguments
@@ -116,6 +117,7 @@ sed -i 's/-mno-tls-direct-seg-refs//' src/Makefile
 	SHLIBDIR=/%{_lib} \
 	CC=%{__cc} \
 	LDFLAGS="%{ldflags}" \
+	PYTHON=%__python3 \
 	all pywrap rubywrap
 
 
@@ -134,6 +136,7 @@ echo "d /var/run/setrans 0755 root root" > %{buildroot}%{_tmpfilesdir}/libselinu
 	LIBDIR="%{buildroot}%{_libdir}" \
 	SHLIBDIR="%{buildroot}/%{_lib}" \
 	RUBYINSTALL="%{buildroot}%{ruby_vendorarchdir}" \
+	PYTHON=%__python3 \
 	install-pywrap install-rubywrap
 mv %{buildroot}%{_sbindir}/matchpathcon %{buildroot}/sbin/matchpathcon
 
