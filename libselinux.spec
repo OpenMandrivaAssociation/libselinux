@@ -8,15 +8,15 @@
 
 Summary:	SELinux library and simple utilities
 Name:		libselinux
-Version:	2.4
-Release:	5
+Version:	2.6
+Release:	1
 License:	Public Domain
 Group:		System/Libraries
 Url:		https://github.com/SELinuxProject/selinux/wiki
-Source0:	%{name}-%{version}.tar.gz
+Source0:	https://raw.githubusercontent.com/wiki/SELinuxProject/selinux/files/releases/20161014/libselinux-%{version}.tar.gz
 Source1:	selinuxconlist.8
 Source2:	selinuxdefcon.8
-Patch0:		libselinux-rhat.patch
+Patch0:		http://pkgs.fedoraproject.org/cgit/rpms/libselinux.git/plain/libselinux-fedora.patch
 BuildRequires:	sepol-static-devel swig
 BuildRequires:	pkgconfig(liblzma) pkgconfig(libpcre)
 
@@ -184,6 +184,7 @@ rm %{buildroot}%{_mandir}/man8/togglesebool*
 %dir %{python_sitearch}/selinux
 %{python_sitearch}/selinux/*.py*
 %{python_sitearch}/selinux/*.so
+%{python_sitearch}/_*.so
 
 %files -n ruby-selinux
 %{ruby_vendorarchdir}/selinux.so
