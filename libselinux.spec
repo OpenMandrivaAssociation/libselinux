@@ -34,13 +34,6 @@ libselinux provides an API for SELinux applications to get and set
 process and file security contexts and to obtain security policy
 decisions. Required for any applications that use the SELinux API.
 
-%package utils
-Summary:	SELinux libselinux utilies
-Group:		Development/Libraries
-
-%description utils
-The libselinux-utils package contains the utilities.
-
 %package -n %{libname}
 Summary:	SELinux library and simple utilities
 Group:		System/Libraries
