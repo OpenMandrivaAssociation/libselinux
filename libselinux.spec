@@ -120,8 +120,8 @@ install -d %{buildroot}%{_includedir}
 install -d %{buildroot}%{_libdir}
 install -d %{buildroot}/%{_lib}
 install -d %{buildroot}%{_mandir}/man3
-install -d %{buildroot}%{_varrun}/setrans
-echo "d /var/run/setrans 0755 root root" > %{buildroot}%{_tmpfilesdir}/libselinux.conf
+install -d %{buildroot}%{_rundir}/setrans
+echo "d /run/setrans 0755 root root" > %{buildroot}%{_tmpfilesdir}/libselinux.conf
 
 
 %makeinstall_std \
@@ -131,7 +131,6 @@ echo "d /var/run/setrans 0755 root root" > %{buildroot}%{_tmpfilesdir}/libselinu
 	PYTHON=%__python3 \
 	install-pywrap install-rubywrap
 mv %{buildroot}%{_sbindir}/matchpathcon %{buildroot}/sbin/matchpathcon
-
 
 # Nuke the files we don't want to distribute
 rm %{buildroot}%{_sbindir}/compute_*
@@ -153,7 +152,7 @@ rm %{buildroot}%{_mandir}/man8/togglesebool*
 %{_sbindir}/*
 /sbin/matchpathcon
 %{_mandir}/man[58]/*
-%ghost %{_varrun}/setrans
+%ghost %{_rundir}/setrans
 %{_tmpfilesdir}/libselinux.conf
 
 %files -n %{libname}
