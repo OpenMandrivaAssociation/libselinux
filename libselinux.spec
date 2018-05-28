@@ -17,6 +17,7 @@ Source0:	https://github.com/SELinuxProject/selinux/releases/download/20180524/%{
 Source1:	selinuxconlist.8
 Source2:	selinuxdefcon.8
 BuildRequires:	sepol-static-devel swig
+BuildRequires:	systemd
 BuildRequires:	pkgconfig(liblzma) pkgconfig(libpcre)
 
 %description
