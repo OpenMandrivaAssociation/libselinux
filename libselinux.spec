@@ -8,15 +8,15 @@
 
 Summary:	SELinux library and simple utilities
 Name:		libselinux
-Version:	2.4
-Release:	4
+Version:	2.8
+Release:	1
 License:	Public Domain
 Group:		System/Libraries
 Url:		https://github.com/SELinuxProject/selinux/wiki
-Source0:	%{name}-%{version}.tar.gz
+Source0:	https://github.com/SELinuxProject/selinux/releases/download/20180524/%{name}-%{version}.tar.gz
 Source1:	selinuxconlist.8
 Source2:	selinuxdefcon.8
-Patch0:		libselinux-rhat.patch
+#Patch0:		libselinux-rhat.patch
 BuildRequires:	sepol-static-devel swig
 BuildRequires:	pkgconfig(liblzma) pkgconfig(libpcre)
 
@@ -120,10 +120,10 @@ sed -i 's/-fipa-pure-const//' src/Makefile utils/Makefile
 	PYTHON=%__python3 \
 	all pywrap rubywrap
 
-
 %install
 mkdir -p %{buildroot}%{_tmpfilesdir}
 install -d %{buildroot}%{_bindir}
+install -d %{buildroot}/sbin/
 install -d %{buildroot}%{_includedir}
 install -d %{buildroot}%{_libdir}
 install -d %{buildroot}/%{_lib}
@@ -133,9 +133,9 @@ echo "d /var/run/setrans 0755 root root" > %{buildroot}%{_tmpfilesdir}/libselinu
 
 
 %makeinstall_std \
-	LIBDIR="%{buildroot}%{_libdir}" \
-	SHLIBDIR="%{buildroot}/%{_lib}" \
-	RUBYINSTALL="%{buildroot}%{ruby_vendorarchdir}" \
+	LIBDIR="/%{_libdir}" \
+	SHLIBDIR="/%{_lib}" \
+	RUBYINSTALL="%{ruby_vendorarchdir}" \
 	PYTHON=%__python3 \
 	install-pywrap install-rubywrap
 mv %{buildroot}%{_sbindir}/matchpathcon %{buildroot}/sbin/matchpathcon
@@ -157,7 +157,7 @@ install -p -m644 %{SOURCE2} -D %{buildroot}%{_mandir}/man8/selinuxdefcon.8
 rm %{buildroot}%{_mandir}/man8/togglesebool*
 
 %files utils
-%doc ChangeLog LICENSE
+%doc LICENSE
 %{_sbindir}/*
 /sbin/matchpathcon
 %{_mandir}/man[58]/*
@@ -171,8 +171,6 @@ rm %{buildroot}%{_mandir}/man8/togglesebool*
 %files -n %{devname}
 %{_libdir}/libselinux.so
 %{_libdir}/pkgconfig/libselinux.pc
-%dir %{_libdir}/golang/src/pkg/github.com/selinux
-%{_libdir}/golang/src/pkg/github.com/selinux/selinux.go
 %dir %{_includedir}/selinux
 %{_includedir}/selinux/*
 %{_mandir}/man3/*
@@ -182,6 +180,7 @@ rm %{buildroot}%{_mandir}/man8/togglesebool*
 
 %files -n python-selinux
 %dir %{python_sitearch}/selinux
+%{python_sitearch}/_selinux.cpython*.so
 %{python_sitearch}/selinux/*.py*
 %{python_sitearch}/selinux/*.so
 
