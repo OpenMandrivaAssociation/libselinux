@@ -9,7 +9,7 @@
 Summary:	SELinux library and simple utilities
 Name:		libselinux
 Version:	2.8
-Release:	1
+Release:	2
 License:	Public Domain
 Group:		System/Libraries
 Url:		https://github.com/SELinuxProject/selinux/wiki
@@ -173,6 +173,7 @@ rm %{buildroot}%{_mandir}/man8/togglesebool*
 %dir %{python_sitearch}/selinux
 %{python_sitearch}/selinux/*.py*
 %{python_sitearch}/selinux/*.so
+%{python_sitearch}/selinux/__pycache__
 %{python_sitearch}/_*.so
 
 %files -n ruby-selinux
