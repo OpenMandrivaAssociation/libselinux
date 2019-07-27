@@ -96,6 +96,7 @@ SELinux applications.
 %package -n python-selinux
 Summary:	Python 3 bindings for %{name}
 Group:		Development/Python
+Provides:	python-libselinux = %{EVRD}
 BuildRequires:	pkgconfig(python3)
 
 %description -n python-selinux
