@@ -119,7 +119,6 @@ sed -i 's/-mno-tls-direct-seg-refs//' src/Makefile
 sed -i 's/-fipa-pure-const//' src/Makefile utils/Makefile
 
 %build
-%global optflags %{optflags} -Qunused-arguments
 %serverbuild_hardened
 
 export DISABLE_RPM="y"
