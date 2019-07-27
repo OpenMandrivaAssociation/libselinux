@@ -224,7 +224,7 @@ rm -f %{buildroot}%{_mandir}/man8/togglesebool*
 %files -n %{statname}
 %{_libdir}/libselinux.a
 
-%files -n python-selinux
+%files -n python-libselinux
 %dir %{python_sitearch}/selinux
 %{python_sitearch}/selinux/*.py*
 %{python_sitearch}/selinux/*.so
