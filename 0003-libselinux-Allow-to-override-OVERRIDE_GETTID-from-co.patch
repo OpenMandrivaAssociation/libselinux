@@ -1,0 +1,39 @@
+From 431f72836d6c02450725cf6ffb1c7223b9fa6acc Mon Sep 17 00:00:00 2001
+From: Petr Lautrbach <plautrba@redhat.com>
+Date: Mon, 11 Mar 2019 15:26:43 +0100
+Subject: [PATCH 3/3] libselinux: Allow to override OVERRIDE_GETTID from
+ command line
+
+$ make CFLAGS="$CFLAGS -DOVERRIDE_GETTID=0" ...
+
+Drop this as soon as glibc-2.30 will become real 2.30 version, see
+https://bugzilla.redhat.com/show_bug.cgi?id=1685594
+
+Signed-off-by: Petr Lautrbach <plautrba@redhat.com>
+---
+ libselinux/src/procattr.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/libselinux/src/procattr.c b/libselinux/src/procattr.c
+index c6799ef2..cbb6824e 100644
+--- a/libselinux/src/procattr.c
++++ b/libselinux/src/procattr.c
+@@ -24,6 +24,7 @@ static __thread char destructor_initialized;
+ 
+ /* Bionic and glibc >= 2.30 declare gettid() system call wrapper in unistd.h and
+  * has a definition for it */
++#ifndef OVERRIDE_GETTID
+ #ifdef __BIONIC__
+   #define OVERRIDE_GETTID 0
+ #elif !defined(__GLIBC_PREREQ)
+@@ -33,6 +34,7 @@ static __thread char destructor_initialized;
+ #else
+   #define OVERRIDE_GETTID 0
+ #endif
++#endif
+ 
+ #if OVERRIDE_GETTID
+ static pid_t gettid(void)
+-- 
+2.21.0
+
