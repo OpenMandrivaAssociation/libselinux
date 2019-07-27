@@ -8,17 +8,28 @@
 
 Summary:	SELinux library and simple utilities
 Name:		libselinux
-Version:	2.8
-Release:	3
+Version:	2.9
+Release:	1
 License:	Public Domain
 Group:		System/Libraries
 Url:		https://github.com/SELinuxProject/selinux/wiki
-Source0:	https://github.com/SELinuxProject/selinux/releases/download/20180524/%{name}-%{version}.tar.gz
+Source0:	https://github.com/SELinuxProject/selinux/releases/download/20190315/%{name}-%{version}.tar.gz
 Source1:	selinuxconlist.8
 Source2:	selinuxdefcon.8
+
+Patch0001:	0001-Fix-selinux-man-page-to-refer-seinfo-and-sesearch-to.patch
+Patch0002:	0002-Verify-context-input-to-funtions-to-make-sure-the-co.patch
+Patch0003:	0003-libselinux-Allow-to-override-OVERRIDE_GETTID-from-co.patch
+Patch0004:	0004-libselinux-Use-Python-distutils-to-install-SELinux-p.patch
+Patch0005:	0005-libselinux-Do-not-use-SWIG_CFLAGS-when-Python-bindin.patch
+
+
 BuildRequires:	sepol-static-devel swig
 BuildRequires:	systemd
-BuildRequires:	pkgconfig(liblzma) pkgconfig(libpcre)
+BuildRequires:	pkgconfig(liblzma)
+BuildRequires:	pkgconfig(libpcre2-posix)
+BuildRequires:	pkgconfig(python)
+BuildRequires:	pkgconfig(python2)
 
 %description
 Security-enhanced Linux is a patch of the Linux® kernel and a
@@ -73,6 +84,15 @@ Group:		System/Kernel and hardware
 %description utils
 This package contains numerous applications utilizing %{name}.
 
+%package -n python2-libselinux
+Provides: python2-libselinux = %{EVRD}
+Summary: SELinux python bindings for libselinux
+Requires: %{libname} = %{version}-%{release}
+
+%description -n python2-libselinux
+The libselinux-python package contains the python bindings for developing
+SELinux applications.
+
 %package -n python-selinux
 Summary:	Python 3 bindings for %{name}
 Group:		Development/Python
@@ -92,8 +112,7 @@ The libselinux-ruby package contains the ruby bindings for developing
 SELinux applications. 
 
 %prep
-%setup -q
-%apply_patches
+%autosetup -p 2 -n libselinux-%{version}
 
 # clang doesnt support these options
 sed -i 's/-mno-tls-direct-seg-refs//' src/Makefile
@@ -101,63 +120,100 @@ sed -i 's/-fipa-pure-const//' src/Makefile utils/Makefile
 
 %build
 %global optflags %{optflags} -Qunused-arguments
-
 %serverbuild_hardened
-%make swigify
-%make \
-	CFLAGS="%{optflags}" \
-	LIBDIR=%{_libdir} \
-	SHLIBDIR=/%{_lib} \
-	CC=%{__cc} \
-	LDFLAGS="%{ldflags}" \
-	PYTHON=%__python3 \
-	all pywrap rubywrap
+
+export DISABLE_RPM="y"
+export USE_PCRE2="y"
+
+#export CFLAGS="$CFLAGS -DOVERRIDE_GETTID=0"
+
+# To support building the Python wrapper against multiple Python runtimes
+# Define a function, for how to perform a "build" of the python wrapper against
+# a specific runtime:
+BuildPythonWrapper() {
+  BinaryName=$1
+
+  # Perform the build from the upstream Makefile:
+  make \
+    CC=%{__cc} \
+    PYTHON=$BinaryName \
+    LIBDIR="%{_libdir}" %{?_smp_mflags} \
+    pywrap
+}
+
+%make_build CC=%{__cc} clean
+%make_build CC=%{__cc} LIBDIR="%{_libdir}" swigify
+%make_build CC=%{__cc} LIBDIR="%{_libdir}" LDFLAGS="%{ldflags}" PYTHON=%{__python} all
+
+BuildPythonWrapper %{__python2}
+BuildPythonWrapper %{__python3}
+
+%make_build SHLIBDIR="%{_libdir}" LIBDIR="%{_libdir}" LIBSEPOLA="%{_libdir}/libsepol.a" rubywrap
+
 
 %install
+InstallPythonWrapper() {
+  BinaryName=$1
+
+  make \
+    PYTHON=$BinaryName \
+    LIBDIR="%{_libdir}" %{?_smp_mflags} \
+    LIBSEPOLA="%{_libdir}/libsepol.a" \
+    pywrap
+
+  make \
+    PYTHON=$BinaryName \
+    DESTDIR="%{buildroot}" LIBDIR="%{_libdir}" \
+    SHLIBDIR="%{_lib}" BINDIR="%{_bindir}" \
+    SBINDIR="%{_sbindir}" \
+    LIBSEPOLA="%{_libdir}/libsepol.a" \
+    install-pywrap
+}
+
+rm -rf %{buildroot}
 mkdir -p %{buildroot}%{_tmpfilesdir}
-install -d %{buildroot}%{_bindir}
-install -d %{buildroot}/sbin/
-install -d %{buildroot}%{_includedir}
-install -d %{buildroot}%{_libdir}
-install -d %{buildroot}/%{_lib}
-install -d %{buildroot}%{_mandir}/man3
-install -d %{buildroot}%{_rundir}/setrans
-echo "d /run/setrans 0755 root root" > %{buildroot}%{_tmpfilesdir}/libselinux.conf
+mkdir -p %{buildroot}%{_libdir}
+mkdir -p %{buildroot}%{_includedir}
+mkdir -p %{buildroot}%{_sbindir}
+install -d -m 0755 %{buildroot}%{_rundir}/setrans
+echo "d %{_rundir}/setrans 0755 root root" > %{buildroot}%{_tmpfilesdir}/libselinux.conf
 
+InstallPythonWrapper %{__python2}
+InstallPythonWrapper %{__python3}
 
-%makeinstall_std \
-	LIBDIR="/%{_libdir}" \
-	SHLIBDIR="/%{_lib}" \
-	RUBYINSTALL="%{ruby_vendorarchdir}" \
-	PYTHON=%__python3 \
-	install-pywrap install-rubywrap
-mv %{buildroot}%{_sbindir}/matchpathcon %{buildroot}/sbin/matchpathcon
-
+make DESTDIR="%{buildroot}" LIBDIR="%{_libdir}" SHLIBDIR="%{_libdir}" BINDIR="%{_bindir}" SBINDIR="%{_sbindir}" RUBYINSTALL=%{ruby_vendorarchdir} install install-rubywrap
 # Nuke the files we don't want to distribute
-rm %{buildroot}%{_sbindir}/compute_*
-rm %{buildroot}%{_sbindir}/getfilecon
-rm %{buildroot}%{_sbindir}/getpidcon
-rm %{buildroot}%{_sbindir}/policyvers
-rm %{buildroot}%{_sbindir}/setfilecon
-rm %{buildroot}%{_sbindir}/getseuser
-rm %{buildroot}%{_sbindir}/togglesebool
-rm %{buildroot}%{_sbindir}/selinux_check_securetty_context
+rm -f %{buildroot}%{_sbindir}/compute_*
+rm -f %{buildroot}%{_sbindir}/deftype
+rm -f %{buildroot}%{_sbindir}/execcon
+rm -f %{buildroot}%{_sbindir}/getenforcemode
+rm -f %{buildroot}%{_sbindir}/getfilecon
+rm -f %{buildroot}%{_sbindir}/getpidcon
+rm -f %{buildroot}%{_sbindir}/mkdircon
+rm -f %{buildroot}%{_sbindir}/policyvers
+rm -f %{buildroot}%{_sbindir}/setfilecon
+rm -f %{buildroot}%{_sbindir}/selinuxconfig
+rm -f %{buildroot}%{_sbindir}/selinuxdisable
+rm -f %{buildroot}%{_sbindir}/getseuser
+rm -f %{buildroot}%{_sbindir}/togglesebool
+rm -f %{buildroot}%{_sbindir}/selinux_check_securetty_context
 mv %{buildroot}%{_sbindir}/getdefaultcon %{buildroot}%{_sbindir}/selinuxdefcon
 mv %{buildroot}%{_sbindir}/getconlist %{buildroot}%{_sbindir}/selinuxconlist
-install -p -m644 %{SOURCE1} -D %{buildroot}%{_mandir}/man8/selinuxconlist.8
-install -p -m644 %{SOURCE2} -D %{buildroot}%{_mandir}/man8/selinuxdefcon.8
-rm %{buildroot}%{_mandir}/man8/togglesebool*
+install -d %{buildroot}%{_mandir}/man8/
+install -m 644 %{SOURCE1} %{buildroot}%{_mandir}/man8/
+install -m 644 %{SOURCE2} %{buildroot}%{_mandir}/man8/
+rm -f %{buildroot}%{_mandir}/man8/togglesebool*
 
 %files utils
 %doc LICENSE
 %{_sbindir}/*
-/sbin/matchpathcon
 %{_mandir}/man[58]/*
+%{_mandir}/ru/man*/*
 %ghost %{_rundir}/setrans
 %{_tmpfilesdir}/libselinux.conf
 
 %files -n %{libname}
-/%{_lib}/libselinux.so.%{major}*
+%{_libdir}/libselinux.so.%{major}*
 
 %files -n %{devname}
 %{_libdir}/libselinux.so
@@ -174,7 +230,11 @@ rm %{buildroot}%{_mandir}/man8/togglesebool*
 %{python_sitearch}/selinux/*.py*
 %{python_sitearch}/selinux/*.so
 %{python_sitearch}/selinux/__pycache__
-%{python_sitearch}/_*.so
+%{python_sitearch}/selinux-%{version}-py%{py_ver}.egg-info
+
+%files -n python2-libselinux
+%{python2_sitearch}/selinux/
+%{python2_sitearch}/selinux-%{version}-*
 
 %files -n ruby-selinux
 %{ruby_vendorarchdir}/selinux.so
