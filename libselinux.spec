@@ -5,24 +5,19 @@
 
 %define _disable_ld_no_undefined 1
 %define _disable_lto 1
+%define _rundir /run
 
 Summary:	SELinux library and simple utilities
 Name:		libselinux
-Version:	2.9
-Release:	2
+Version:	3.0
+Release:	1
+Epoch:		1
 License:	Public Domain
 Group:		System/Libraries
 Url:		https://github.com/SELinuxProject/selinux/wiki
-Source0:	https://github.com/SELinuxProject/selinux/releases/download/20190315/%{name}-%{version}.tar.gz
+Source0:	https://github.com/SELinuxProject/selinux/releases/download/20191204/%{name}-%{version}.tar.gz
 Source1:	selinuxconlist.8
 Source2:	selinuxdefcon.8
-
-Patch0001:	0001-Fix-selinux-man-page-to-refer-seinfo-and-sesearch-to.patch
-Patch0002:	0002-Verify-context-input-to-funtions-to-make-sure-the-co.patch
-Patch0003:	0003-libselinux-Allow-to-override-OVERRIDE_GETTID-from-co.patch
-Patch0004:	0004-libselinux-Use-Python-distutils-to-install-SELinux-p.patch
-Patch0005:	0005-libselinux-Do-not-use-SWIG_CFLAGS-when-Python-bindin.patch
-
 
 BuildRequires:	sepol-static-devel swig
 BuildRequires:	systemd
@@ -49,8 +44,8 @@ decisions. Required for any applications that use the SELinux API.
 %package -n %{libname}
 Summary:	SELinux library and simple utilities
 Group:		System/Libraries
-Provides:	libselinux = %{version}-%{release}
-Provides:	selinux = %{version}-%{release}
+Provides:	libselinux = %{EVRD}
+Provides:	selinux = %{EVRD}
 
 %description -n %{libname}
 libselinux provides an API for SELinux applications to get and set
@@ -60,8 +55,8 @@ decisions. Required for any applications that use the SELinux API.
 %package -n %{devname}
 Summary:	Development libraries and header files for %{name}
 Group:		Development/C
-Provides:	selinux-devel = %{version}-%{release}
-Requires:	%{libname} = %{version}-%{release}
+Provides:	selinux-devel = %{EVRD}
+Requires:	%{libname} = %{EVRD}
 
 %description -n %{devname}
 The selinux-devel package contains the libraries and header
@@ -70,8 +65,8 @@ files needed for developing SELinux applications.
 %package -n %{statname}
 Summary:	Static development libraries for %{name}
 Group:		Development/C
-Provides:	selinux-static-devel = %{version}-%{release}
-Requires:	%{devname} = %{version}-%{release}
+Provides:	selinux-static-devel = %{EVRD}
+Requires:	%{devname} = %{EVRD}
 
 %description -n %{statname}
 The selinux-static-devel package contains the static libraries
@@ -79,34 +74,35 @@ needed for developing SELinux applications.
 
 %package utils
 Summary:	Utilities for %{name}
+Provides:	selinux-utils = %{EVRD}
 Group:		System/Kernel and hardware
 
 %description utils
 This package contains numerous applications utilizing %{name}.
 
-%package -n python2-libselinux
-Provides: python2-libselinux = %{EVRD}
-Summary: SELinux python bindings for libselinux
-Requires: %{libname} = %{version}-%{release}
-
-%description -n python2-libselinux
-The libselinux-python package contains the python bindings for developing
-SELinux applications.
-
-%package -n python-selinux
-Summary:	Python 3 bindings for %{name}
-Group:		Development/Python
+%package -n	python3-libselinux
+Summary:	SELinux python bindings for libselinux
+Requires:	%{libname} = %{EVRD}
 Provides:	python-libselinux = %{EVRD}
 BuildRequires:	pkgconfig(python3)
 
-%description -n python-selinux
-This package contains python 3 bindings for %{name}.
+%description -n python3-libselinux
+The libselinux-python package contains the python bindings for developing
+SELinux applications.
+
+%package -n	python2-selinux
+Summary:	Python 2 bindings for %{name}
+Group:		Development/Python
+Provides:	%{name}-python
+BuildRequires:	pkgconfig(python2)
+
+%description -n python2-selinux
+This package contains python 2 bindings for %{name}.
 
 %package -n ruby-selinux
 Summary:	SELinux ruby bindings for libselinux
 Group:		Development/Ruby
 BuildRequires:	pkgconfig(ruby)
-#Provides: ruby(selinux)
 
 %description -n ruby-selinux
 The libselinux-ruby package contains the ruby bindings for developing 
@@ -121,7 +117,6 @@ sed -i 's/-fipa-pure-const//' src/Makefile utils/Makefile
 
 %build
 %serverbuild_hardened
-
 export DISABLE_RPM="y"
 export USE_PCRE2="y"
 
@@ -225,16 +220,17 @@ rm -f %{buildroot}%{_mandir}/man8/togglesebool*
 %files -n %{statname}
 %{_libdir}/libselinux.a
 
-%files -n python-selinux
-%dir %{python_sitearch}/selinux
-%{python_sitearch}/selinux/*.py*
-%{python_sitearch}/selinux/*.so
-%{python_sitearch}/selinux/__pycache__
-%{python_sitearch}/selinux-%{version}-py%{py_ver}.egg-info
+%files -n python2-selinux
+%dir %{python2_sitearch}/selinux
+%{python2_sitearch}/selinux/*.py*
+%{python2_sitearch}/selinux/*.so
+%{python2_sitearch}/*.so
+%{python2_sitearch}/selinux-%{version}-py%{py2_ver}.egg-info
 
-%files -n python2-libselinux
-%{python2_sitearch}/selinux/
-%{python2_sitearch}/selinux-%{version}-*
+%files -n python3-libselinux
+%{python3_sitearch}/selinux/
+%{python3_sitearch}/selinux-%{version}-*
+%{python3_sitearch}/_selinux.*
 
 %files -n ruby-selinux
 %{ruby_vendorarchdir}/selinux.so
