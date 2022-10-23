@@ -3,6 +3,9 @@
 %define devname %mklibname selinux -d
 %define statname %mklibname selinux -d -s
 
+# Work around build system deficiency
+%undefine _debugsource_packages
+
 %define _disable_ld_no_undefined 1
 %define _disable_lto 1
 %define _rundir /run
