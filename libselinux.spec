@@ -9,13 +9,13 @@
 
 Summary:	SELinux library and simple utilities
 Name:		libselinux
-Version:	3.0
+Version:	3.4
 Release:	1
 Epoch:		1
 License:	Public Domain
 Group:		System/Libraries
 Url:		https://github.com/SELinuxProject/selinux/wiki
-Source0:	https://github.com/SELinuxProject/selinux/releases/download/20191204/%{name}-%{version}.tar.gz
+Source0:	https://github.com/SELinuxProject/selinux/releases/download/%{version}/%{name}-%{version}.tar.gz
 Source1:	selinuxconlist.8
 Source2:	selinuxdefcon.8
 
@@ -23,8 +23,7 @@ BuildRequires:	sepol-static-devel swig
 BuildRequires:	systemd
 BuildRequires:	pkgconfig(liblzma)
 BuildRequires:	pkgconfig(libpcre2-posix)
-BuildRequires:	pkgconfig(python)
-BuildRequires:	pkgconfig(python2)
+BuildRequires:	pkgconfig(python3)
 
 %description
 Security-enhanced Linux is a patch of the Linux® kernel and a
@@ -80,24 +79,16 @@ Group:		System/Kernel and hardware
 %description utils
 This package contains numerous applications utilizing %{name}.
 
-%package -n	python3-libselinux
+%package -n	python-libselinux
 Summary:	SELinux python bindings for libselinux
 Requires:	%{libname} = %{EVRD}
-Provides:	python-libselinux = %{EVRD}
 BuildRequires:	pkgconfig(python3)
+Obsoletes:	python2-libselinux
+%rename python3-libselinux
 
-%description -n python3-libselinux
+%description -n python-libselinux
 The libselinux-python package contains the python bindings for developing
 SELinux applications.
-
-%package -n	python2-selinux
-Summary:	Python 2 bindings for %{name}
-Group:		Development/Python
-Provides:	%{name}-python
-BuildRequires:	pkgconfig(python2)
-
-%description -n python2-selinux
-This package contains python 2 bindings for %{name}.
 
 %package -n ruby-selinux
 Summary:	SELinux ruby bindings for libselinux
@@ -113,7 +104,7 @@ SELinux applications.
 
 # clang doesnt support these options
 sed -i 's/-mno-tls-direct-seg-refs//' src/Makefile
-sed -i 's/-fipa-pure-const//' src/Makefile utils/Makefile
+sed -i 's/-fipa-pure-const//;s/-funit-at-a-time//' src/Makefile utils/Makefile
 
 %build
 %serverbuild_hardened
@@ -140,7 +131,6 @@ BuildPythonWrapper() {
 %make_build CC=%{__cc} LIBDIR="%{_libdir}" swigify
 %make_build CC=%{__cc} LIBDIR="%{_libdir}" LDFLAGS="%{ldflags}" PYTHON=%{__python} all
 
-BuildPythonWrapper %{__python2}
 BuildPythonWrapper %{__python3}
 
 %make_build SHLIBDIR="%{_libdir}" LIBDIR="%{_libdir}" LIBSEPOLA="%{_libdir}/libsepol.a" rubywrap
@@ -173,7 +163,6 @@ mkdir -p %{buildroot}%{_sbindir}
 install -d -m 0755 %{buildroot}%{_rundir}/setrans
 echo "d %{_rundir}/setrans 0755 root root" > %{buildroot}%{_tmpfilesdir}/libselinux.conf
 
-InstallPythonWrapper %{__python2}
 InstallPythonWrapper %{__python3}
 
 make DESTDIR="%{buildroot}" LIBDIR="%{_libdir}" SHLIBDIR="%{_libdir}" BINDIR="%{_bindir}" SBINDIR="%{_sbindir}" RUBYINSTALL=%{ruby_vendorarchdir} install install-rubywrap
@@ -220,14 +209,7 @@ rm -f %{buildroot}%{_mandir}/man8/togglesebool*
 %files -n %{statname}
 %{_libdir}/libselinux.a
 
-%files -n python2-selinux
-%dir %{python2_sitearch}/selinux
-%{python2_sitearch}/selinux/*.py*
-%{python2_sitearch}/selinux/*.so
-%{python2_sitearch}/*.so
-%{python2_sitearch}/selinux-%{version}-py%{py2_ver}.egg-info
-
-%files -n python3-libselinux
+%files -n python-libselinux
 %{python3_sitearch}/selinux/
 %{python3_sitearch}/selinux-%{version}-*
 %{python3_sitearch}/_selinux.*
