@@ -12,7 +12,7 @@
 
 Summary:	SELinux library and simple utilities
 Name:		libselinux
-Version:	3.4
+Version:	3.5
 Release:	1
 Epoch:		1
 License:	Public Domain
@@ -214,7 +214,7 @@ rm -f %{buildroot}%{_mandir}/man8/togglesebool*
 
 %files -n python-libselinux
 %{python3_sitearch}/selinux/
-%{python3_sitearch}/selinux-%{version}-*
+%{python3_sitearch}/selinux-%{version}*
 %{python3_sitearch}/_selinux.*
 
 %files -n ruby-selinux
