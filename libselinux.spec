@@ -13,7 +13,7 @@
 Summary:	SELinux library and simple utilities
 Name:		libselinux
 Version:	3.5
-Release:	1
+Release:	2
 Epoch:		1
 License:	Public Domain
 Group:		System/Libraries
