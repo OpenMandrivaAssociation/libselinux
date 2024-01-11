@@ -1,5 +1,6 @@
 %define major 1
-%define libname %mklibname selinux %{major}
+%define oldlibname %mklibname selinux 1
+%define libname %mklibname selinux
 %define devname %mklibname selinux -d
 %define statname %mklibname selinux -d -s
 
@@ -12,9 +13,8 @@
 
 Summary:	SELinux library and simple utilities
 Name:		libselinux
-Version:	3.5
-Release:	2
-Epoch:		1
+Version:	3.6
+Release:	1
 License:	Public Domain
 Group:		System/Libraries
 Url:		https://github.com/SELinuxProject/selinux/wiki
@@ -48,6 +48,7 @@ Summary:	SELinux library and simple utilities
 Group:		System/Libraries
 Provides:	libselinux = %{EVRD}
 Provides:	selinux = %{EVRD}
+%rename %{oldlibname}
 
 %description -n %{libname}
 libselinux provides an API for SELinux applications to get and set
@@ -124,19 +125,19 @@ BuildPythonWrapper() {
 
   # Perform the build from the upstream Makefile:
   make \
-    CC=%{__cc} \
+    CC="%{__cc}" \
     PYTHON=$BinaryName \
     LIBDIR="%{_libdir}" %{?_smp_mflags} \
     pywrap
 }
 
-%make_build CC=%{__cc} clean
-%make_build CC=%{__cc} LIBDIR="%{_libdir}" swigify
-%make_build CC=%{__cc} LIBDIR="%{_libdir}" LDFLAGS="%{ldflags}" PYTHON=%{__python} all
+%make_build CC="%{__cc} -Wno-error=cast-align" clean
+%make_build CC="%{__cc} -Wno-error=cast-align" LIBDIR="%{_libdir}" swigify
+%make_build CC="%{__cc} -Wno-error=cast-align" LIBDIR="%{_libdir}" LDFLAGS="%{ldflags}" PYTHON=%{__python} all
 
 BuildPythonWrapper %{__python3}
 
-%make_build SHLIBDIR="%{_libdir}" LIBDIR="%{_libdir}" LIBSEPOLA="%{_libdir}/libsepol.a" rubywrap
+%make_build CC="%{__cc} -Wno-error=cast-align" SHLIBDIR="%{_libdir}" LIBDIR="%{_libdir}" LIBSEPOLA="%{_libdir}/libsepol.a" rubywrap
 
 
 %install
@@ -144,12 +145,14 @@ InstallPythonWrapper() {
   BinaryName=$1
 
   make \
+    CC="%{__cc}" \
     PYTHON=$BinaryName \
     LIBDIR="%{_libdir}" %{?_smp_mflags} \
     LIBSEPOLA="%{_libdir}/libsepol.a" \
     pywrap
 
   make \
+    CC="%{__cc}" \
     PYTHON=$BinaryName \
     DESTDIR="%{buildroot}" LIBDIR="%{_libdir}" \
     SHLIBDIR="%{_lib}" BINDIR="%{_bindir}" \
@@ -195,7 +198,6 @@ rm -f %{buildroot}%{_mandir}/man8/togglesebool*
 %doc LICENSE
 %{_sbindir}/*
 %{_mandir}/man[58]/*
-%{_mandir}/ru/man*/*
 %ghost %{_rundir}/setrans
 %{_tmpfilesdir}/libselinux.conf
 
