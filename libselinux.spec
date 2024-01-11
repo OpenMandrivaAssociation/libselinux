@@ -14,7 +14,7 @@
 Summary:	SELinux library and simple utilities
 Name:		libselinux
 Version:	3.6
-Release:	1
+Release:	2
 License:	Public Domain
 Group:		System/Libraries
 Url:		https://github.com/SELinuxProject/selinux/wiki
@@ -193,6 +193,9 @@ install -d %{buildroot}%{_mandir}/man8/
 install -m 644 %{SOURCE1} %{buildroot}%{_mandir}/man8/
 install -m 644 %{SOURCE2} %{buildroot}%{_mandir}/man8/
 rm -f %{buildroot}%{_mandir}/man8/togglesebool*
+
+# Get rid of -I/usr/include and -L/usr/lib64 nastiness
+sed -i -e '/^Cflags:/d' -e 's/-L\${libdir} //g' %{buildroot}%{_libdir}/pkgconfig/*.pc
 
 %files utils
 %doc LICENSE
