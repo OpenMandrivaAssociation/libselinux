@@ -1,3 +1,5 @@
+%bcond_with bootstrap
+
 %define major 1
 %define oldlibname %mklibname selinux 1
 %define libname %mklibname selinux
@@ -117,6 +119,10 @@ export USE_PCRE2="y"
 
 #export CFLAGS="$CFLAGS -DOVERRIDE_GETTID=0"
 
+%if %{with bootstrap}
+%make_build CC="%{__cc} -Wno-error=cast-align" clean
+%make_build CC="%{__cc} -Wno-error=cast-align -Wno-error=unused-command-line-argument" LIBDIR="%{_libdir}" LDFLAGS="%{ldflags}" PYTHON=%{__python} all
+%else
 # To support building the Python wrapper against multiple Python runtimes
 # Define a function, for how to perform a "build" of the python wrapper against
 # a specific runtime:
@@ -138,7 +144,7 @@ BuildPythonWrapper() {
 BuildPythonWrapper %{__python3}
 
 %make_build CC="%{__cc} -Wno-error=cast-align" SHLIBDIR="%{_libdir}" LIBDIR="%{_libdir}" LIBSEPOLA="%{_libdir}/libsepol.a" rubywrap
-
+%endif
 
 %install
 InstallPythonWrapper() {
@@ -169,9 +175,14 @@ mkdir -p %{buildroot}%{_sbindir}
 install -d -m 0755 %{buildroot}%{_rundir}/setrans
 echo "d %{_rundir}/setrans 0755 root root" > %{buildroot}%{_tmpfilesdir}/libselinux.conf
 
+%if %{with bootstrap}
+make DESTDIR="%{buildroot}" LIBDIR="%{_libdir}" SHLIBDIR="%{_libdir}" BINDIR="%{_bindir}" SBINDIR="%{_sbindir}" install
+%else
 InstallPythonWrapper %{__python3}
 
 make DESTDIR="%{buildroot}" LIBDIR="%{_libdir}" SHLIBDIR="%{_libdir}" BINDIR="%{_bindir}" SBINDIR="%{_sbindir}" RUBYINSTALL=%{ruby_vendorarchdir} install install-rubywrap
+%endif
+
 # Nuke the files we don't want to distribute
 rm -f %{buildroot}%{_sbindir}/compute_*
 rm -f %{buildroot}%{_sbindir}/deftype
@@ -217,6 +228,7 @@ sed -i -e '/^Cflags:/d' -e 's/-L\${libdir} //g' %{buildroot}%{_libdir}/pkgconfig
 %files -n %{statname}
 %{_libdir}/libselinux.a
 
+%if ! %{with bootstrap}
 %files -n python-libselinux
 %{python3_sitearch}/selinux/
 %{python3_sitearch}/selinux-%{version}*
@@ -224,3 +236,4 @@ sed -i -e '/^Cflags:/d' -e 's/-L\${libdir} //g' %{buildroot}%{_libdir}/pkgconfig
 
 %files -n ruby-selinux
 %{ruby_vendorarchdir}/selinux.so
+%endif
