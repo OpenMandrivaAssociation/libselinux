@@ -15,7 +15,7 @@
 
 Summary:	SELinux library and simple utilities
 Name:		libselinux
-Version:	3.7
+Version:	3.8.1
 Release:	1
 License:	Public Domain
 Group:		System/Libraries
